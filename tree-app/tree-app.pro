@@ -29,7 +29,8 @@ SOURCES += \
         dialog.cpp
 
 HEADERS += \
-        dialog.h
+        dialog.h \
+        Tree.h
 
 FORMS += \
         dialog.ui
