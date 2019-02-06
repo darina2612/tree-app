@@ -27,12 +27,19 @@ CONFIG += c++11
 SOURCES += \
         main.cpp \
         dialog.cpp \
-    PersonData.cpp
+    PersonData.cpp \
+    Drawer.cpp \
+    ConversionUtils.cpp
 
 HEADERS += \
         dialog.h \
         Tree.h \
-    PersonData.h
+    PersonData.h \
+    Drawer.h \
+    Rect.h \
+    Point.h \
+    Size.h \
+    ConversionUtils.h
 
 FORMS += \
         dialog.ui
