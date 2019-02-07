@@ -18,9 +18,16 @@ public:
 
         const std::vector<std::shared_ptr<Node>>& getChildren() const;
 
+        const T& getValue() const;
+        T& getValue();
+
+//        void doWithChildren(const std::function<void (const std::shared_ptr<Node>&, ...)> f);
+
+//        void doWithChildren(const std::function<void (std::shared_ptr<Node>&, ...)> f);
+
     protected:
         T value_;
-        std::vector<std::shared_ptr<Node>> childern_;
+        std::vector<std::shared_ptr<Node>> children_;
     };
 
     using NodePtr = std::shared_ptr<Node>;
@@ -54,14 +61,46 @@ Tree<T>::Node::Node(const T& value) : value_(value)
 template <typename T>
 void Tree<T>::Node::addChild(const T& value)
 {
-    childern_.emplace_back(value);
+    children_.emplace_back(value);
 }
 
 template <typename T>
 const std::vector<typename Tree<T>::NodePtr>& Tree<T>::Node::getChildren() const
 {
-    return childern_;
+    return children_;
 }
+
+template <typename T>
+
+const T& Tree<T>::Node::getValue() const
+{
+    return value_;
+}
+
+template <typename T>
+T& Tree<T>::Node::getValue()
+{
+    return value_;
+}
+
+// TODO : Implement correctly when the knowledge for that is gathered
+//template <typename T>
+//void Tree<T>::Node::doWithChildren(const std::function<void (const Tree<T>::NodePtr&, ...)> f)
+//{
+//    for(const auto& child : children_)
+//    {
+//        f(child, ...);
+//    }
+//}
+
+//template <typename T>
+//void Tree<T>::Node::doWithChildren(const std::function<void (Tree<T>::NodePtr&, ...)> f)
+//{
+//    for(const auto& child : children)
+//    {
+//        f(child, ...);
+//    }
+//}
 
 //Tree
 template <typename T>
