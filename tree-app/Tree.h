@@ -16,12 +16,15 @@ public:
 
         void addChild(const T& value);
 
+        const std::vector<std::shared_ptr<Node>>& getChildren() const;
+
     protected:
         T value_;
         std::vector<std::shared_ptr<Node>> childern_;
     };
 
     using NodePtr = std::shared_ptr<Node>;
+    using NodesList = std::vector<NodePtr>;
 
     Tree() = default;
     Tree(const T& rootVal);
@@ -29,7 +32,16 @@ public:
     void addValue(const T& val);
     //void addValue(const NodePtr& parent, const T& val);
 
+    size_t height() const;
+
+    void getNodesAtLevel(NodesList& nodes, size_t level) const;
+
 protected:
+
+    size_t height(const NodePtr& root) const;
+
+    void getNodesAtLevel(const NodePtr& root, NodesList& nodes, size_t level) const;
+
     NodePtr root_;
 };
 
@@ -45,8 +57,13 @@ void Tree<T>::Node::addChild(const T& value)
     childern_.emplace_back(value);
 }
 
-//Tree
+template <typename T>
+const std::vector<typename Tree<T>::NodePtr>& Tree<T>::Node::getChildren() const
+{
+    return childern_;
+}
 
+//Tree
 template <typename T>
 Tree<T>::Tree(const T& rootVal) : root_(rootVal)
 {
@@ -59,3 +76,53 @@ void Tree<T>::addValue(const T& val)
         root_ = {val};
 }
 
+template <typename T>
+size_t Tree<T>::height() const
+{
+    return height(root_);
+}
+
+template <typename T>
+void Tree<T>::getNodesAtLevel(Tree<T>::NodesList& nodes, size_t level) const
+{
+    getNodesAtLevel(root_, nodes, level);
+}
+
+//Tree - Helpers
+template <typename T>
+size_t Tree<T>::height(const Tree<T>::NodePtr& root) const
+{
+    if(root == nullptr)
+        return 0;
+
+    size_t maxSubtreeHeight{};
+
+    auto children = root->getChildren();
+
+    for(const auto& child : children)
+    {
+        maxSubtreeHeight = std::max(maxSubtreeHeight, height(child));
+    }
+
+    return  1 + maxSubtreeHeight;
+}
+
+template <typename T>
+void Tree<T>::getNodesAtLevel(const Tree<T>::NodePtr& root, Tree<T>::NodesList& nodes, size_t level) const
+{
+    if(root == nullptr)
+        return;
+
+    if(level == 0)
+    {
+        nodes.push_back(root);
+        return;
+    }
+
+    auto children = root->getChildren();
+
+    for(const auto& child : children)
+    {
+        getNodesAtLevel(child, nodes, level - 1);
+    }
+}

@@ -29,7 +29,8 @@ SOURCES += \
         dialog.cpp \
     PersonData.cpp \
     Drawer.cpp \
-    ConversionUtils.cpp
+    ConversionUtils.cpp \
+    FamilyTree.cpp
 
 HEADERS += \
         dialog.h \
@@ -39,7 +40,8 @@ HEADERS += \
     Rect.h \
     Point.h \
     Size.h \
-    ConversionUtils.h
+    ConversionUtils.h \
+    FamilyTree.h
 
 FORMS += \
         dialog.ui
