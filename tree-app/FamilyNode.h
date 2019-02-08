@@ -9,6 +9,8 @@ class FamilyNode
 public:
     FamilyNode() = default;
 
+    FamilyNode(const PersonDataPtr& data, const Rect& frame);
+
     void draw(Drawer& drawer);
 
 protected:

@@ -5,6 +5,7 @@
 
 #include <QtGui>
 #include <QtCore>
+#include "FamilyTree.h"
 
 namespace Ui {
 class Dialog;
@@ -23,6 +24,8 @@ private:
 
 protected:
     void paintEvent(QPaintEvent* e) override;
+
+    FamilyTreePtr tree_;
 };
 
 #endif // DIALOG_H

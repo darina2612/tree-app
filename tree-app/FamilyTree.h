@@ -5,7 +5,7 @@
 
 class Drawer;
 
-class FamilyTree : Tree<FamilyNode>
+class FamilyTree : public Tree<FamilyNode>
 {
 public:
     void draw(Drawer& drawer);
@@ -13,3 +13,5 @@ public:
 protected:
     void draw(const NodePtr& root, Drawer& drawer);
 };
+
+using FamilyTreePtr = std::shared_ptr<FamilyTree>;

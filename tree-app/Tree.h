@@ -21,9 +21,8 @@ public:
         const T& getValue() const;
         T& getValue();
 
-//        void doWithChildren(const std::function<void (const std::shared_ptr<Node>&, ...)> f);
-
-//        void doWithChildren(const std::function<void (std::shared_ptr<Node>&, ...)> f);
+        void doWithChildren(const std::function<void (const std::shared_ptr<Node>&)> f) const;
+        void doWithChildren(const std::function<void (std::shared_ptr<Node>&)> f);
 
     protected:
         T value_;
@@ -83,24 +82,23 @@ T& Tree<T>::Node::getValue()
     return value_;
 }
 
-// TODO : Implement correctly when the knowledge for that is gathered
-//template <typename T>
-//void Tree<T>::Node::doWithChildren(const std::function<void (const Tree<T>::NodePtr&, ...)> f)
-//{
-//    for(const auto& child : children_)
-//    {
-//        f(child, ...);
-//    }
-//}
+template <typename T>
+void Tree<T>::Node::doWithChildren(const std::function<void (const std::shared_ptr<Node>&)> f) const
+{
+    for(const auto& child : children_)
+    {
+        f(child);
+    }
+}
 
-//template <typename T>
-//void Tree<T>::Node::doWithChildren(const std::function<void (Tree<T>::NodePtr&, ...)> f)
-//{
-//    for(const auto& child : children)
-//    {
-//        f(child, ...);
-//    }
-//}
+template <typename T>
+void Tree<T>::Node::doWithChildren(const std::function<void (std::shared_ptr<Node>&)> f)
+{
+    for(auto& child : children_)
+    {
+        f(child);
+    }
+}
 
 //Tree
 template <typename T>
@@ -136,12 +134,10 @@ size_t Tree<T>::height(const Tree<T>::NodePtr& root) const
 
     size_t maxSubtreeHeight{};
 
-    auto children = root->getChildren();
-
-    for(const auto& child : children)
+    root->doWithChildren([&maxSubtreeHeight, this](const auto& child)
     {
         maxSubtreeHeight = std::max(maxSubtreeHeight, height(child));
-    }
+    });
 
     return  1 + maxSubtreeHeight;
 }
@@ -158,10 +154,8 @@ void Tree<T>::getNodesAtLevel(const Tree<T>::NodePtr& root, Tree<T>::NodesList& 
         return;
     }
 
-    auto children = root->getChildren();
-
-    for(const auto& child : children)
+    root->doWithChildren([&nodes, level, this](const auto& child)
     {
         getNodesAtLevel(child, nodes, level - 1);
-    }
+    });
 }
