@@ -11,3 +11,13 @@ void FamilyNode::draw(Drawer& drawer)
 {
     drawer.darwRect(frame_);
 }
+
+Rect& FamilyNode::getFrame()
+{
+    return frame_;
+}
+
+const Rect& FamilyNode::getFrame() const
+{
+    return frame_;
+}

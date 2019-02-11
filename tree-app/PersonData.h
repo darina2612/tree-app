@@ -6,6 +6,7 @@
 class PersonData
 {
 public:
+    PersonData() = default;
     PersonData(const std::string& name, const std::string& pictureFileName);
 
 protected:

@@ -13,7 +13,12 @@ public:
 
     void draw(Drawer& drawer);
 
+    Rect& getFrame();
+    const Rect& getFrame() const;
+
 protected:
     PersonDataPtr data_;
     Rect frame_;
 };
+
+using FamilyNodePtr = std::shared_ptr<FamilyNode>;

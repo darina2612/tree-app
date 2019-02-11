@@ -42,6 +42,8 @@ public:
 
     void getNodesAtLevel(NodesList& nodes, size_t level) const;
 
+    NodePtr getRoot();
+
 protected:
 
     size_t height(const NodePtr& root) const;
@@ -60,7 +62,7 @@ Tree<T>::Node::Node(const T& value) : value_(value)
 template <typename T>
 void Tree<T>::Node::addChild(const T& value)
 {
-    children_.emplace_back(value);
+    children_.emplace_back(std::make_shared<Node>(value));
 }
 
 template <typename T>
@@ -102,7 +104,7 @@ void Tree<T>::Node::doWithChildren(const std::function<void (std::shared_ptr<Nod
 
 //Tree
 template <typename T>
-Tree<T>::Tree(const T& rootVal) : root_(rootVal)
+Tree<T>::Tree(const T& rootVal) : root_(std::make_shared<Node>(rootVal))
 {
 }
 
@@ -110,7 +112,7 @@ template <typename T>
 void Tree<T>::addValue(const T& val)
 {
     if(root_ == nullptr)
-        root_ = {val};
+        root_ = std::make_shared<Tree<T>::Node>(val);
 }
 
 template <typename T>
@@ -123,6 +125,12 @@ template <typename T>
 void Tree<T>::getNodesAtLevel(Tree<T>::NodesList& nodes, size_t level) const
 {
     getNodesAtLevel(root_, nodes, level);
+}
+
+template <typename T>
+typename Tree<T>::NodePtr Tree<T>::getRoot()
+{
+    return root_;
 }
 
 //Tree - Helpers
