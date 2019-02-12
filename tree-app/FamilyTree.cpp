@@ -34,6 +34,25 @@ void FamilyTree::draw(const NodePtr& root, Drawer& drawer)
     {
         draw(child, drawer);
     });
+
+    drawLinkLines(root_, drawer);
+}
+
+void FamilyTree::drawLinkLines(const NodePtr& root, Drawer& drawer) const
+{
+    if(root == nullptr || root->getChildren().empty())
+        return;
+
+    const auto& children = root->getChildren();
+    Rect rootFrame = root->getValue().getFrame();
+    Point rootBottomMidpoint = rootFrame.bottomMidpoint();
+
+    for(const auto& child : children)
+    {
+       Rect childFrame = child->getValue().getFrame();
+
+       drawer.darwLine(rootBottomMidpoint, childFrame.topMidpoint());
+    }
 }
 
 void FamilyTree::updateLayout()

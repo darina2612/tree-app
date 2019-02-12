@@ -39,6 +39,16 @@ struct Rect
         return size_.height_;
     }
 
+    Point topMidpoint() const
+    {
+        return {origin_.x_ + (size_.width_ / 2), origin_.y_};
+    }
+
+    Point bottomMidpoint() const
+    {
+        return {origin_.x_ + (size_.width_ / 2), origin_.y_ + size_.height_};
+    }
+
     Point origin_;
     Size size_;
 };

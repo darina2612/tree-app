@@ -20,6 +20,8 @@ public:
 protected:
     void draw(const NodePtr& root, Drawer& drawer);
 
+    void drawLinkLines(const NodePtr& root, Drawer& drawer) const;
+
     void updateLayout();
 
     void updateLevelLayout(NodesList& levelNodes, int horizontalOffset, int& verticalOffset);
