@@ -10,6 +10,7 @@ FamilyNode::FamilyNode(const PersonDataPtr& data, const Rect& frame) :
 void FamilyNode::draw(Drawer& drawer)
 {
     drawer.darwRect(frame_);
+    data_->draw(drawer, frame_);
 }
 
 Rect& FamilyNode::getFrame()

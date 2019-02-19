@@ -32,3 +32,16 @@ void Drawer::darwLine(const Point& point1, const Point& point2)
                        ConversionUtils::qPointFromPoint(point2));
 }
 
+void Drawer::drawImage(const Rect& frame, const std::string& filename)
+{
+    if(painter_ == nullptr)
+    {
+        assert(false);
+        return;
+    }
+
+    QImage qImage(filename.c_str());
+
+    painter_->drawImage(ConversionUtils::qRectFromRect(frame), qImage);
+}
+
