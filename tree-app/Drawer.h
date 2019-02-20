@@ -17,6 +17,8 @@ public:
 
     void drawImage(const Rect& frame, const std::string& filename);
 
+    void drawText(const Rect& frame, const std::string& text);
+
 protected:
     QPainter* painter_;
 };

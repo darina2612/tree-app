@@ -45,3 +45,17 @@ void Drawer::drawImage(const Rect& frame, const std::string& filename)
     painter_->drawImage(ConversionUtils::qRectFromRect(frame), qImage);
 }
 
+void Drawer::drawText(const Rect& frame, const std::string& text)
+{
+    if(painter_ == nullptr)
+    {
+        assert(false);
+        return;
+    }
+
+    QString qStr(text.c_str());
+
+    painter_->drawText(ConversionUtils::qRectFromRect(frame), qStr);
+}
+
+

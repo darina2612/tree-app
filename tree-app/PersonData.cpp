@@ -11,6 +11,10 @@ PersonData::PersonData(const std::string& name, const std::string& pictureFileNa
 
 void PersonData::draw(Drawer& drawer, const Rect& frame) const
 {
-    drawer.drawImage({frame.left() + 10, frame.top() + 10, frame.width() - 20, frame.height() - 20},
+
+    drawer.drawImage({frame.left() + 10, frame.top() + 10, frame.width() - 20, frame.height() - 50},
                      pictureFileName_);
+
+    drawer.drawText({frame.left() + 10, frame.bottom() - 40, frame.width() - 20, 30}, name_);
+
 }

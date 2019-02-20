@@ -9,7 +9,7 @@ Dialog::Dialog(QWidget *parent) :
     ui->setupUi(this);
 
     //testing, should be removed
-    auto personData = std::make_shared<PersonData>("", "../tree-app/tree-app/test_img.jpg");
+    auto personData = std::make_shared<PersonData>("Text", "../tree-app/tree-app/test_img.jpg");
     Rect frame{0, 0, 200, 200};
     FamilyNode node{personData, frame};
 
