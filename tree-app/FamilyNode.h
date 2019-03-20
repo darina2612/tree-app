@@ -16,6 +16,8 @@ public:
     Rect& getFrame();
     const Rect& getFrame() const;
 
+    PersonDataPtr getPersonData();
+
 protected:
     PersonDataPtr data_;
     Rect frame_;

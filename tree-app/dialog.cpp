@@ -1,6 +1,9 @@
 #include "dialog.h"
-#include "ui_dialog.h"
+
+#include <cassert>
 #include "Drawer.h"
+#include "ui_dialog.h"
+#include "ConversionUtils.h"
 
 Dialog::Dialog(QWidget *parent) :
     QDialog(parent),
@@ -28,8 +31,33 @@ Dialog::~Dialog()
 
 void Dialog::paintEvent(QPaintEvent* )
 {
+    if(tree_ == nullptr)
+        return;
+
     QPainter painter(this);
     Drawer drawer(&painter);
 
     tree_->draw(drawer);
+}
+
+void Dialog::mouseDoubleClickEvent(QMouseEvent *event)
+{
+    if(tree_ == nullptr)
+        return;
+
+    if(event == nullptr)
+    {
+        assert(false);
+        return;
+    }
+
+    Point pos{event->x(), event->y()};
+
+    auto node = tree_->getDataForNodeAtPosition(pos);
+
+    if(node != nullptr)
+    {
+        //do something
+        this->repaint();
+    }
 }

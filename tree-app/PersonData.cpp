@@ -9,6 +9,16 @@ PersonData::PersonData(const std::string& name, const std::string& pictureFileNa
 {
 }
 
+void PersonData::setName(const std::string& name)
+{
+    name_ = name;
+}
+
+void PersonData::setPictureFileName(const std::string& pictureFileName)
+{
+    pictureFileName_ = pictureFileName;
+}
+
 void PersonData::draw(Drawer& drawer, const Rect& frame) const
 {
 

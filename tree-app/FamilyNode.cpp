@@ -22,3 +22,8 @@ const Rect& FamilyNode::getFrame() const
 {
     return frame_;
 }
+
+PersonDataPtr FamilyNode::getPersonData()
+{
+    return data_;
+}

@@ -20,6 +20,11 @@ void FamilyTree::draw(Drawer& drawer)
     draw(root_, drawer);
 }
 
+PersonDataPtr FamilyTree::getDataForNodeAtPosition(const Point& pos) const
+{
+    return  getDataForNodeAtPosition(root_, pos);
+}
+
 // Helpers
 void FamilyTree::draw(const NodePtr& root, Drawer& drawer)
 {
@@ -36,6 +41,26 @@ void FamilyTree::draw(const NodePtr& root, Drawer& drawer)
     });
 
     drawLinkLines(root_, drawer);
+}
+
+PersonDataPtr FamilyTree::getDataForNodeAtPosition(const NodePtr& root,  const Point& pos) const
+{
+    if(root == nullptr)
+        return nullptr;
+
+    auto data = root->getValue();
+    if(data.getFrame().contains(pos))
+        return data.getPersonData();
+
+    const auto& children = root->getChildren();
+    for(const auto& child : children)
+    {
+        auto data = getDataForNodeAtPosition(child, pos);
+        if(data != nullptr)
+            return data;
+    }
+
+    return nullptr;
 }
 
 void FamilyTree::drawLinkLines(const NodePtr& root, Drawer& drawer) const

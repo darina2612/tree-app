@@ -25,6 +25,8 @@ private:
 protected:
     void paintEvent(QPaintEvent* e) override;
 
+    void mouseDoubleClickEvent(QMouseEvent *event) override;
+
     FamilyTreePtr tree_;
 };
 

@@ -5,6 +5,7 @@
 #include "FamilyNode.h"
 
 class Drawer;
+struct Point;
 
 class FamilyTree : public Tree<FamilyNode>
 {
@@ -17,8 +18,12 @@ public:
 
     void draw(Drawer& drawer);
 
+    PersonDataPtr getDataForNodeAtPosition(const Point& pos) const;
+
 protected:
     void draw(const NodePtr& root, Drawer& drawer);
+
+    PersonDataPtr getDataForNodeAtPosition(const NodePtr& root,  const Point& pos) const;
 
     void drawLinkLines(const NodePtr& root, Drawer& drawer) const;
 

@@ -49,6 +49,12 @@ struct Rect
         return {origin_.x_ + (size_.width_ / 2), origin_.y_ + size_.height_};
     }
 
+    bool contains(const Point& p) const
+    {
+        return p.x_ >= left() && p.x_ <= right() &&
+               p.y_  >= top() && p.y_ <= bottom();
+    }
+
     Point origin_;
     Size size_;
 };
