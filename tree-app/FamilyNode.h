@@ -11,6 +11,9 @@ public:
 
     FamilyNode(const PersonDataPtr& data, const Rect& frame);
 
+    //deep copy
+    FamilyNode copy() const;
+
     void draw(Drawer& drawer);
 
     Rect& getFrame();

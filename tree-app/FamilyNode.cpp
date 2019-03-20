@@ -7,6 +7,13 @@ FamilyNode::FamilyNode(const PersonDataPtr& data, const Rect& frame) :
 
 }
 
+FamilyNode FamilyNode::copy() const
+{
+    PersonDataPtr dataPtr = data_ != nullptr ? std::make_shared<PersonData>(*data_) : nullptr;
+
+    return {dataPtr, frame_};
+}
+
 void FamilyNode::draw(Drawer& drawer)
 {
     drawer.darwRect(frame_);

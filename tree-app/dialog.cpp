@@ -21,7 +21,7 @@ Dialog::Dialog(QWidget *parent) :
     auto root = tree_->getRoot();
 
     for(size_t i = 0; i < 3; ++i)
-        root->addChild(node);
+        root->addChild(node.copy());
 }
 
 Dialog::~Dialog()
@@ -57,7 +57,7 @@ void Dialog::mouseDoubleClickEvent(QMouseEvent *event)
 
     if(node != nullptr)
     {
-        //do something
+        //node->setName("Clicked");
         this->repaint();
     }
 }
