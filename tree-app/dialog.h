@@ -6,6 +6,7 @@
 #include <QtGui>
 #include <QtCore>
 #include "FamilyTree.h"
+#include "DataEditControl.h"
 
 namespace Ui {
 class Dialog;
@@ -28,6 +29,8 @@ protected:
     void mouseDoubleClickEvent(QMouseEvent *event) override;
 
     FamilyTreePtr tree_;
+
+    DataEditControl nodeEditControl_;
 };
 
 #endif // DIALOG_H

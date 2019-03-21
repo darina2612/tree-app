@@ -31,7 +31,8 @@ SOURCES += \
     Drawer.cpp \
     ConversionUtils.cpp \
     FamilyTree.cpp \
-    FamilyNode.cpp
+    FamilyNode.cpp \
+    DataEditControl.cpp
 
 HEADERS += \
         dialog.h \
@@ -43,7 +44,8 @@ HEADERS += \
     Size.h \
     ConversionUtils.h \
     FamilyTree.h \
-    FamilyNode.h
+    FamilyNode.h \
+    DataEditControl.h
 
 FORMS += \
         dialog.ui

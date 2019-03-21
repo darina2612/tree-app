@@ -4,7 +4,7 @@
 #include <memory>
 
 class Drawer;
-class Rect;
+struct Rect;
 
 class PersonData
 {
@@ -13,7 +13,10 @@ public:
     PersonData(const std::string& name, const std::string& pictureFileName);
 
     void setName(const std::string& name);
+    const std::string& getName() const;
+
     void setPictureFileName(const std::string& pictureFileName);
+    const std::string& getPictureFileName() const;
 
     void draw(Drawer& drawer, const Rect& frame) const;
 

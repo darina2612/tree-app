@@ -4,6 +4,7 @@
 #include "Drawer.h"
 #include "ui_dialog.h"
 #include "ConversionUtils.h"
+#include "DataEditControl.h"
 
 Dialog::Dialog(QWidget *parent) :
     QDialog(parent),
@@ -57,7 +58,8 @@ void Dialog::mouseDoubleClickEvent(QMouseEvent *event)
 
     if(node != nullptr)
     {
-        //node->setName("Clicked");
-        this->repaint();
+        nodeEditControl_.updateData(node);
+        nodeEditControl_.show();
+        //this->repaint();
     }
 }

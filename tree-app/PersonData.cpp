@@ -14,9 +14,19 @@ void PersonData::setName(const std::string& name)
     name_ = name;
 }
 
+const std::string& PersonData::getName() const
+{
+    return name_;
+}
+
 void PersonData::setPictureFileName(const std::string& pictureFileName)
 {
     pictureFileName_ = pictureFileName;
+}
+
+const std::string& PersonData::getPictureFileName() const
+{
+    return pictureFileName_;
 }
 
 void PersonData::draw(Drawer& drawer, const Rect& frame) const
