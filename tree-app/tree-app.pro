@@ -32,7 +32,8 @@ SOURCES += \
     ConversionUtils.cpp \
     FamilyTree.cpp \
     FamilyNode.cpp \
-    DataEditControl.cpp
+    DataEditControl.cpp \
+    PictureChooser.cpp
 
 HEADERS += \
         dialog.h \
@@ -45,7 +46,8 @@ HEADERS += \
     ConversionUtils.h \
     FamilyTree.h \
     FamilyNode.h \
-    DataEditControl.h
+    DataEditControl.h \
+    PictureChooser.h
 
 FORMS += \
         dialog.ui
