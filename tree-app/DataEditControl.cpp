@@ -25,7 +25,6 @@ void DataEditControl::setup()
     box_ = new QGroupBox;
     auto layout = new QVBoxLayout;
 
-
     nameEdit_ = new TextLineEditControl("Име : ");
     layout->addWidget(nameEdit_);
 
@@ -38,6 +37,7 @@ void DataEditControl::setup()
     {
         auto newName = nameEdit_->text().toLocal8Bit().data();
         dataPtr_->setName(newName);
+        dataPtr_->setPictureFileName(pictureChooser_->fileName().toLocal8Bit().data());
         box_->hide();
     });
     layout->addWidget(okButton);

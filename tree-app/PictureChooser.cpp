@@ -40,7 +40,12 @@ QString PictureChooser::fileName() const
 void PictureChooser::chooseFile()
 {
     QString fileName;
-    fileName = QFileDialog::getOpenFileName(this, lineEdit_->text());
+
+    //Source : https://stackoverflow.com/questions/1604440/how-to-set-selected-filter-on-qfiledialog
+    QString selfilter = tr("JPEG (*.jpg *.jpeg)");
+    fileName = QFileDialog::getOpenFileName(this, "Избор на картинка",
+                                            "", tr("All files (*.*);;JPEG (*.jpg *.jpeg);;TIFF (*.tif)" ),
+                                            &selfilter);
 
     if(!fileName.isEmpty())
     {
