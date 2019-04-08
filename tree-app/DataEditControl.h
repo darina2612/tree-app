@@ -2,11 +2,10 @@
 
 #include "PersonData.h"
 
+
 class QGroupBox;
-class QVBoxLayout;
-class QLineEdit;
-class QLabel;
-class QPushButton;
+class TextLineEditControl;
+class PictureChooser;
 
 class DataEditControl
 {
@@ -25,8 +24,6 @@ protected:
     PersonDataPtr dataPtr_;
 
     QGroupBox* box_;
-    QVBoxLayout* layout_;
-    QLabel* nameLabel_;
-    QLineEdit* nameEdit_;
-    QPushButton* okButton_;
+    TextLineEditControl* nameEdit_;
+    PictureChooser* pictureChooser_;
 };

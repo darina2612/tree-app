@@ -5,6 +5,8 @@
 #include <QGroupBox>
 #include <QVBoxLayout>
 #include <QPushButton>
+#include "PictureChooser.h"
+#include "TextLineEditControl.h"
 
 #include <iostream>
 
@@ -21,26 +23,26 @@ DataEditControl::~DataEditControl()
 void DataEditControl::setup()
 {
     box_ = new QGroupBox;
-    layout_ = new QVBoxLayout;
+    auto layout = new QVBoxLayout;
 
-    nameLabel_ = new QLabel;
-    nameLabel_->setText("Име : ");
 
-    nameEdit_ = new QLineEdit;
-    layout_->addWidget(nameLabel_);
-    layout_->addWidget(nameEdit_);
+    nameEdit_ = new TextLineEditControl("Име : ");
+    layout->addWidget(nameEdit_);
 
-    okButton_ = new QPushButton("OK");
-    QObject::connect(okButton_, &QPushButton::pressed,
+    pictureChooser_ = new PictureChooser();
+    layout->addWidget(pictureChooser_);
+
+    auto okButton = new QPushButton("OK");
+    QObject::connect(okButton, &QPushButton::pressed,
     [this]()
     {
         auto newName = nameEdit_->text().toLocal8Bit().data();
         dataPtr_->setName(newName);
         box_->hide();
     });
-    layout_->addWidget(okButton_);
+    layout->addWidget(okButton);
 
-    box_->setLayout(layout_);
+    box_->setLayout(layout);
 }
 
 void DataEditControl::updateData(const PersonDataPtr& data)

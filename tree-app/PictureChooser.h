@@ -1,4 +1,6 @@
 #pragma once
+
+#include <memory>
 #include <QWidget>
 
 // Source : https://doc.qt.io/archives/3.3/designer-manual-7.html

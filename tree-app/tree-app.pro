@@ -33,7 +33,8 @@ SOURCES += \
     FamilyTree.cpp \
     FamilyNode.cpp \
     DataEditControl.cpp \
-    PictureChooser.cpp
+    PictureChooser.cpp \
+    TextLineEditControl.cpp
 
 HEADERS += \
         dialog.h \
@@ -47,7 +48,8 @@ HEADERS += \
     FamilyTree.h \
     FamilyNode.h \
     DataEditControl.h \
-    PictureChooser.h
+    PictureChooser.h \
+    TextLineEditControl.h
 
 FORMS += \
         dialog.ui

@@ -17,8 +17,9 @@ PictureChooser::PictureChooser(QWidget *parent) :
     connect(lineEdit_, SIGNAL(textChanged(const QString&)),
             this, SIGNAL(fileNameChanged(const QString&)));
 
-    button_ = new QPushButton( "...", this);
-    button_->setFixedWidth( button_->fontMetrics().width(" ... " ));
+    auto buttonText = " Отвори ";
+    button_ = new QPushButton(buttonText, this);
+    button_->setFixedWidth(button_->fontMetrics().width(buttonText));
     layout->addWidget(button_);
 
     connect(button_, SIGNAL(clicked()), this, SLOT(chooseFile()));
