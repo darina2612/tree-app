@@ -26,8 +26,12 @@ private:
 protected:
     void paintEvent(QPaintEvent* e) override;
 
-    void mouseDoubleClickEvent(QMouseEvent *event) override;
+    void mouseDoubleClickEvent(QMouseEvent* event) override;
 
+private slots:
+    void showContextMenu(const QPoint& pos);
+
+private:
     FamilyTreePtr tree_;
 
     DataEditControl nodeEditControl_;

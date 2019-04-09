@@ -18,12 +18,14 @@ public:
 
     void draw(Drawer& drawer);
 
+    NodePtr getNodeAtPosition(const Point& pos) const;
+
     PersonDataPtr getDataForNodeAtPosition(const Point& pos) const;
 
 protected:
     void draw(const NodePtr& root, Drawer& drawer);
 
-    PersonDataPtr getDataForNodeAtPosition(const NodePtr& root,  const Point& pos) const;
+    NodePtr getNodeAtPosition(const NodePtr& root, const Point& pos) const;
 
     void drawLinkLines(const NodePtr& root, Drawer& drawer) const;
 

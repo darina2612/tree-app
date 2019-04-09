@@ -20,9 +20,19 @@ void FamilyTree::draw(Drawer& drawer)
     draw(root_, drawer);
 }
 
+FamilyTree::NodePtr FamilyTree::getNodeAtPosition(const Point& pos) const
+{
+    return getNodeAtPosition(root_, pos);
+}
+
 PersonDataPtr FamilyTree::getDataForNodeAtPosition(const Point& pos) const
 {
-    return  getDataForNodeAtPosition(root_, pos);
+    auto node = getNodeAtPosition(pos);
+
+    if(node != nullptr)
+        return node->getValue().getPersonData();
+
+    return nullptr;
 }
 
 // Helpers
@@ -43,21 +53,21 @@ void FamilyTree::draw(const NodePtr& root, Drawer& drawer)
     drawLinkLines(root_, drawer);
 }
 
-PersonDataPtr FamilyTree::getDataForNodeAtPosition(const NodePtr& root,  const Point& pos) const
+FamilyTree::NodePtr FamilyTree::getNodeAtPosition(const NodePtr& root, const Point& pos) const
 {
     if(root == nullptr)
         return nullptr;
 
     auto data = root->getValue();
     if(data.getFrame().contains(pos))
-        return data.getPersonData();
+        return root;
 
     const auto& children = root->getChildren();
     for(const auto& child : children)
     {
-        auto data = getDataForNodeAtPosition(child, pos);
-        if(data != nullptr)
-            return data;
+        auto node = getNodeAtPosition(child, pos);
+        if(node != nullptr)
+            return node;
     }
 
     return nullptr;
@@ -74,9 +84,10 @@ void FamilyTree::drawLinkLines(const NodePtr& root, Drawer& drawer) const
 
     for(const auto& child : children)
     {
-       Rect childFrame = child->getValue().getFrame();
+        drawLinkLines(child, drawer);
 
-       drawer.darwLine(rootBottomMidpoint, childFrame.topMidpoint());
+        Rect childFrame = child->getValue().getFrame();
+        drawer.darwLine(rootBottomMidpoint, childFrame.topMidpoint());
     }
 }
 
@@ -116,7 +127,6 @@ void FamilyTree::updateLevelLayout(NodesList& levelNodes, int horizontalOffset, 
         frame.origin_ = {horizontalOffset, verticalOffset};
         horizontalOffset += frame.width();
     }
-
 
     verticalOffset += verticalOffsetUpdate;
 }

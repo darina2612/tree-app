@@ -38,6 +38,8 @@ void DataEditControl::setup()
         auto newName = nameEdit_->text().toLocal8Bit().data();
         dataPtr_->setName(newName);
         dataPtr_->setPictureFileName(pictureChooser_->fileName().toLocal8Bit().data());
+        if(okClickedCalback_)
+            okClickedCalback_(dataPtr_);
         box_->hide();
     });
     layout->addWidget(okButton);
@@ -45,10 +47,13 @@ void DataEditControl::setup()
     box_->setLayout(layout);
 }
 
-void DataEditControl::updateData(const PersonDataPtr& data)
+void DataEditControl::updateData(const PersonDataPtr& data,
+                                 const std::function<void(const PersonDataPtr&)>& okCalback)
 {
     dataPtr_ = data;
     nameEdit_->setText(dataPtr_->getName().c_str());
+    pictureChooser_->setFileName(dataPtr_->getPictureFileName().c_str());
+    okClickedCalback_ = okCalback;
 }
 
 void DataEditControl::show() const
