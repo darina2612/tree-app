@@ -22,10 +22,14 @@ public:
 
     PersonDataPtr getDataForNodeAtPosition(const Point& pos) const;
 
+    void removeSubtreeAtPosition(const Point& pos);
+
 protected:
     void draw(const NodePtr& root, Drawer& drawer);
 
     NodePtr getNodeAtPosition(const NodePtr& root, const Point& pos) const;
+
+    bool removeSubtreeAtPosition(NodePtr& root, const Point& pos);
 
     void drawLinkLines(const NodePtr& root, Drawer& drawer) const;
 

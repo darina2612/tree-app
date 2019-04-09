@@ -35,6 +35,11 @@ PersonDataPtr FamilyTree::getDataForNodeAtPosition(const Point& pos) const
     return nullptr;
 }
 
+void FamilyTree::removeSubtreeAtPosition(const Point& pos)
+{
+    removeSubtreeAtPosition(root_, pos);
+}
+
 // Helpers
 void FamilyTree::draw(const NodePtr& root, Drawer& drawer)
 {
@@ -71,6 +76,29 @@ FamilyTree::NodePtr FamilyTree::getNodeAtPosition(const NodePtr& root, const Poi
     }
 
     return nullptr;
+}
+
+bool FamilyTree::removeSubtreeAtPosition(NodePtr& root, const Point& pos)
+{
+    auto pred = [&pos](const auto& node)
+    {
+        return node->getValue().getFrame().contains(pos);
+    };
+
+    if(root == nullptr)
+        return false;
+
+    if(root->removeChild(pred))
+        return true;
+
+    auto& childern = root->getChildren();
+    for(auto& child : childern)
+    {
+        if(removeSubtreeAtPosition(child, pos))
+            return true;
+    }
+
+    return false;
 }
 
 void FamilyTree::drawLinkLines(const NodePtr& root, Drawer& drawer) const

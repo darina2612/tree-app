@@ -2,6 +2,7 @@
 
 #include <vector>
 #include <memory>
+#include <algorithm>
 
 template <typename T>
 class Tree
@@ -17,12 +18,15 @@ public:
         void addChild(const T& value);
 
         const std::vector<std::shared_ptr<Node>>& getChildren() const;
+        std::vector<std::shared_ptr<Node>>& getChildren();
 
         const T& getValue() const;
         T& getValue();
 
         void doWithChildren(const std::function<void (const std::shared_ptr<Node>&)> f) const;
         void doWithChildren(const std::function<void (std::shared_ptr<Node>&)> f);
+
+        bool removeChild(const std::function<bool (const std::shared_ptr<Node>&)> pred);
 
     protected:
         T value_;
@@ -72,6 +76,13 @@ const std::vector<typename Tree<T>::NodePtr>& Tree<T>::Node::getChildren() const
 }
 
 template <typename T>
+std::vector<typename Tree<T>::NodePtr>& Tree<T>::Node::getChildren()
+{
+    return children_;
+}
+
+
+template <typename T>
 
 const T& Tree<T>::Node::getValue() const
 {
@@ -101,6 +112,20 @@ void Tree<T>::Node::doWithChildren(const std::function<void (std::shared_ptr<Nod
         f(child);
     }
 }
+
+template <typename T>
+bool Tree<T>::Node::removeChild(const std::function<bool (const std::shared_ptr<Node>&)> pred)
+{
+    auto it = std::find_if(children_.begin(), children_.end(), pred);
+
+    if(it != children_.end())
+    {
+        children_.erase(it);
+        return true;
+    }
+    return false;
+}
+
 
 //Tree
 template <typename T>
