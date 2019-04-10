@@ -66,7 +66,7 @@ void Dialog::mouseDoubleClickEvent(QMouseEvent* event)
     {
         nodeEditControl_.updateData(node);
         nodeEditControl_.show();
-        //this->repaint();
+        //repaint();
     }
 }
 
@@ -90,6 +90,15 @@ void Dialog::showContextMenu(const QPoint& pos)
        nodeEditControl_.show();
    });
    contextMenu.addAction(&addChildAction);
+
+   QAction  deleteAction("Изтрий", this);
+   QObject::connect(&deleteAction, &QAction::triggered,
+   [this, &pos]()
+   {
+       tree_->removeSubtreeAtPosition(ConversionUtils::pointFromQPoint(pos));
+       repaint();
+   });
+   contextMenu.addAction(&deleteAction);
 
    contextMenu.exec(mapToGlobal(pos));
 }

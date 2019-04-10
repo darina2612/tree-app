@@ -37,6 +37,9 @@ PersonDataPtr FamilyTree::getDataForNodeAtPosition(const Point& pos) const
 
 void FamilyTree::removeSubtreeAtPosition(const Point& pos)
 {
+    if(root_ != nullptr && root_->getValue().getFrame().contains(pos))
+        root_.reset();
+
     removeSubtreeAtPosition(root_, pos);
 }
 
