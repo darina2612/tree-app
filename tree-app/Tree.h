@@ -4,8 +4,15 @@
 #include <memory>
 #include <algorithm>
 
+class NodeChangeObserver
+{
+public:
+    virtual void nodeChanged() = 0;
+    virtual ~NodeChangeObserver() = default;
+};
+
 template <typename T>
-class Tree
+class Tree : public NodeChangeObserver
 {
 public:
 
@@ -28,9 +35,16 @@ public:
 
         bool removeChild(const std::function<bool (const std::shared_ptr<Node>&)> pred);
 
+        void setObserver(NodeChangeObserver* observer);
+
     protected:
+
+        void notifyForChange();
+
         T value_;
         std::vector<std::shared_ptr<Node>> children_;
+
+        NodeChangeObserver* changeObserver_;
     };
 
     using NodePtr = std::shared_ptr<Node>;
@@ -47,6 +61,8 @@ public:
     void getNodesAtLevel(NodesList& nodes, size_t level) const;
 
     NodePtr getRoot();
+
+    void nodeChanged() override;
 
 protected:
 
@@ -67,6 +83,8 @@ template <typename T>
 void Tree<T>::Node::addChild(const T& value)
 {
     children_.emplace_back(std::make_shared<Node>(value));
+    children_.back()->setObserver(changeObserver_);
+    notifyForChange();
 }
 
 template <typename T>
@@ -126,18 +144,35 @@ bool Tree<T>::Node::removeChild(const std::function<bool (const std::shared_ptr<
     return false;
 }
 
+template <typename T>
+void Tree<T>::Node::setObserver(NodeChangeObserver* observer)
+{
+    changeObserver_ = observer;
+}
+
+template <typename T>
+void Tree<T>::Node::notifyForChange()
+{
+    if(changeObserver_ != nullptr)
+        changeObserver_->nodeChanged();
+}
+
 
 //Tree
 template <typename T>
 Tree<T>::Tree(const T& rootVal) : root_(std::make_shared<Node>(rootVal))
 {
+    root_->setObserver(this);
 }
 
 template <typename T>
 void Tree<T>::addValue(const T& val)
 {
     if(root_ == nullptr)
+    {
         root_ = std::make_shared<Tree<T>::Node>(val);
+        root_->setObserver(this);
+    }
 }
 
 template <typename T>
@@ -156,6 +191,11 @@ template <typename T>
 typename Tree<T>::NodePtr Tree<T>::getRoot()
 {
     return root_;
+}
+
+template <typename T>
+void Tree<T>::nodeChanged()
+{
 }
 
 //Tree - Helpers

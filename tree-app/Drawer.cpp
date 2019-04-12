@@ -9,7 +9,7 @@ Drawer::Drawer(QPainter* painter) : painter_(painter)
 {
 }
 
-void Drawer::darwRect(const Rect& rect)
+void Drawer::drawRect(const Rect& rect)
 {
     if(painter_ == nullptr)
     {
@@ -20,7 +20,7 @@ void Drawer::darwRect(const Rect& rect)
     painter_->drawRect(ConversionUtils::qRectFromRect(rect));
 }
 
-void Drawer::darwLine(const Point& point1, const Point& point2)
+void Drawer::drawLine(const Point& point1, const Point& point2)
 {
     if(painter_ == nullptr)
     {

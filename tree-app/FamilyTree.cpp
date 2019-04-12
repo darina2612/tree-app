@@ -43,6 +43,24 @@ void FamilyTree::removeSubtreeAtPosition(const Point& pos)
     removeSubtreeAtPosition(root_, pos);
 }
 
+Rect FamilyTree::getBoundingBox() const
+{
+    return getBoundingBox(root_);
+}
+
+Rect FamilyTree::getExtendedBoundingBox() const
+{
+    auto bb = getBoundingBox();
+    bb.extendWith({nodesHorizontalOffset_ * 2, levelsVerticalOffset_ * 2});
+
+    return bb;
+}
+
+void FamilyTree::nodeChanged()
+{
+    updateLayout();
+}
+
 // Helpers
 void FamilyTree::draw(const NodePtr& root, Drawer& drawer)
 {
@@ -104,6 +122,21 @@ bool FamilyTree::removeSubtreeAtPosition(NodePtr& root, const Point& pos)
     return false;
 }
 
+Rect FamilyTree::getBoundingBox(const NodePtr& root) const
+{
+    Rect bb{};
+    if(root == nullptr)
+        return bb;
+
+    bb = root->getValue().getFrame();
+    root->doWithChildren([this, &bb] (const std::shared_ptr<Node>& child)
+    {
+        bb.unionWith(getBoundingBox(child));
+    });
+
+    return bb;
+}
+
 void FamilyTree::drawLinkLines(const NodePtr& root, Drawer& drawer) const
 {
     if(root == nullptr || root->getChildren().empty())
@@ -118,7 +151,7 @@ void FamilyTree::drawLinkLines(const NodePtr& root, Drawer& drawer) const
         drawLinkLines(child, drawer);
 
         Rect childFrame = child->getValue().getFrame();
-        drawer.darwLine(rootBottomMidpoint, childFrame.topMidpoint());
+        drawer.drawLine(rootBottomMidpoint, childFrame.topMidpoint());
     }
 }
 

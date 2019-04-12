@@ -2,6 +2,7 @@
 
 #include <map>
 #include "Tree.h"
+#include "Rect.h"
 #include "FamilyNode.h"
 
 class Drawer;
@@ -24,12 +25,20 @@ public:
 
     void removeSubtreeAtPosition(const Point& pos);
 
+    Rect getBoundingBox() const;
+
+    Rect getExtendedBoundingBox() const;
+
+    void nodeChanged() override;
+
 protected:
     void draw(const NodePtr& root, Drawer& drawer);
 
     NodePtr getNodeAtPosition(const NodePtr& root, const Point& pos) const;
 
     bool removeSubtreeAtPosition(NodePtr& root, const Point& pos);
+
+    Rect getBoundingBox(const NodePtr& root) const;
 
     void drawLinkLines(const NodePtr& root, Drawer& drawer) const;
 

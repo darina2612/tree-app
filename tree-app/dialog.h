@@ -24,14 +24,19 @@ private:
     Ui::Dialog *ui;
 
 protected:
-    void paintEvent(QPaintEvent* e) override;
+    void paintEvent(QPaintEvent*) override;
 
     void mouseDoubleClickEvent(QMouseEvent* event) override;
+
+    void showEvent(QShowEvent* event) override;
 
 private slots:
     void showContextMenu(const QPoint& pos);
 
 private:
+
+    void updateSize();
+
     FamilyTreePtr tree_;
 
     DataEditControl nodeEditControl_;

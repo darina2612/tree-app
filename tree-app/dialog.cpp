@@ -66,8 +66,13 @@ void Dialog::mouseDoubleClickEvent(QMouseEvent* event)
     {
         nodeEditControl_.updateData(node);
         nodeEditControl_.show();
-        //repaint();
     }
+}
+
+void Dialog::showEvent(QShowEvent* event)
+{
+    if(event != nullptr && !event->spontaneous())
+        updateSize();
 }
 
 void Dialog::showContextMenu(const QPoint& pos)
@@ -83,9 +88,10 @@ void Dialog::showContextMenu(const QPoint& pos)
    [this, node]()
    {
        PersonDataPtr newChild = std::make_shared<PersonData>();
-       nodeEditControl_.updateData(newChild, [node](const PersonDataPtr& data)
+       nodeEditControl_.updateData(newChild, [this, node](const PersonDataPtr& data)
        {
            node->addChild({data, {0, 0, 200, 200}});
+           updateSize();
        });
        nodeEditControl_.show();
    });
@@ -101,4 +107,18 @@ void Dialog::showContextMenu(const QPoint& pos)
    contextMenu.addAction(&deleteAction);
 
    contextMenu.exec(mapToGlobal(pos));
+}
+
+void Dialog::updateSize()
+{
+    if(tree_ == nullptr)
+        return;
+
+    auto treeBb = tree_->getExtendedBoundingBox();
+    auto size = sizeHint();
+
+    size.setWidth(std::max(size.width(), treeBb.width()));
+    size.setHeight(std::max(size.height(), treeBb.height()));
+
+    resize(size);
 }

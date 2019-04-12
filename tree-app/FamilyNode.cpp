@@ -16,7 +16,7 @@ FamilyNode FamilyNode::copy() const
 
 void FamilyNode::draw(Drawer& drawer)
 {
-    drawer.darwRect(frame_);
+    drawer.drawRect(frame_);
     data_->draw(drawer, frame_);
 }
 
