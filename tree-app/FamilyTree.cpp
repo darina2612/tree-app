@@ -61,6 +61,16 @@ void FamilyTree::nodeChanged()
     updateLayout();
 }
 
+void FamilyTree::serialize(std::ostream& os) const
+{
+    Tree<FamilyNode>::serialize(os);
+}
+
+void FamilyTree::deserialize(std::istream& is)
+{
+    Tree<FamilyNode>::deserialize(is);
+}
+
 // Helpers
 void FamilyTree::draw(const NodePtr& root, Drawer& drawer)
 {

@@ -34,3 +34,31 @@ PersonDataPtr FamilyNode::getPersonData()
 {
     return data_;
 }
+
+void FamilyNode::serialize(std::ostream& os) const
+{
+    if(data_ != nullptr)
+    {
+        os << true;
+        data_->serialize(os);
+    }
+    else
+    {
+        os << false;
+    }
+
+    frame_.serialize(os);
+}
+
+void FamilyNode::deserialize(std::istream& is)
+{
+    bool dataPresent;
+    is >> dataPresent;
+    if(dataPresent)
+    {
+        data_ = std::make_shared<PersonData>();
+        data_->deserialize(is);
+    }
+    frame_.deserialize(is);
+}
+

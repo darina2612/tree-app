@@ -2,6 +2,7 @@
 
 #include <string>
 #include <memory>
+#include <iostream>
 
 class Drawer;
 struct Rect;
@@ -19,6 +20,9 @@ public:
     const std::string& getPictureFileName() const;
 
     void draw(Drawer& drawer, const Rect& frame) const;
+
+    void serialize(std::ostream& os) const;
+    void deserialize(std::istream& is);
 
 protected:
     std::string name_;

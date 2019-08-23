@@ -2,6 +2,7 @@
 
 #include "Rect.h"
 #include "Drawer.h"
+#include <iostream>
 #include "PersonData.h"
 
 class FamilyNode
@@ -20,6 +21,9 @@ public:
     const Rect& getFrame() const;
 
     PersonDataPtr getPersonData();
+
+    void serialize(std::ostream& os) const;
+    void deserialize(std::istream& is);
 
 protected:
     PersonDataPtr data_;

@@ -2,6 +2,7 @@
 
 #include "Size.h"
 #include "Point.h"
+#include <iostream>
 #include <algorithm>
 
 struct Rect
@@ -76,6 +77,18 @@ struct Rect
 
         size_.width_ += size.width_;
         size_.height_ += size.height_;
+    }
+
+    void serialize(std::ostream& os) const
+    {
+        origin_.serialize(os);
+        size_.serialize(os);
+    }
+
+    void deserialize(std::istream& is)
+    {
+        origin_.deserialize(is);
+        size_.deserialize(is);
     }
 
     Point origin_;

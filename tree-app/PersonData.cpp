@@ -36,5 +36,14 @@ void PersonData::draw(Drawer& drawer, const Rect& frame) const
                      pictureFileName_);
 
     drawer.drawText({frame.left() + 10, frame.bottom() - 40, frame.width() - 20, 30}, name_);
+}
 
+void PersonData::serialize(std::ostream& os) const
+{
+    os << name_ << pictureFileName_;
+}
+
+void PersonData::deserialize(std::istream& is)
+{
+    is >> name_ >> pictureFileName_;
 }

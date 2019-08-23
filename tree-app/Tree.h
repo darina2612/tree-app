@@ -2,6 +2,7 @@
 
 #include <vector>
 #include <memory>
+#include <iostream>
 #include <algorithm>
 
 class NodeChangeObserver
@@ -37,6 +38,9 @@ public:
 
         void setObserver(NodeChangeObserver* observer);
 
+        void serialize(std::ostream& os) const;
+        void deserialize(std::istream& is);
+
     protected:
 
         void notifyForChange();
@@ -63,6 +67,9 @@ public:
     NodePtr getRoot();
 
     void nodeChanged() override;
+
+    virtual void serialize(std::ostream& os) const;
+    virtual void deserialize(std::istream& is);
 
 protected:
 
@@ -151,6 +158,57 @@ void Tree<T>::Node::setObserver(NodeChangeObserver* observer)
 }
 
 template <typename T>
+void Tree<T>::Node::serialize(std::ostream& os) const
+{
+    value_.serialize(os);
+    os << children_.size();
+
+    if(children_.size() == 0)
+        return;
+
+    for(const auto& child : children_)
+    {
+        if(child != nullptr)
+        {
+            os << true;
+            child->serialize(os);
+        }
+        else
+        {
+            os << false;
+        }
+    }
+}
+
+template <typename T>
+void Tree<T>::Node::deserialize(std::istream& is)
+{
+    value_.deserialize(is);
+
+    size_t size;
+    is >> size;
+
+    if(size == 0)
+        return;
+
+    for(size_t  i = 0; i < size; ++i)
+    {
+        bool exists;
+        is >> exists;
+
+        if(exists)
+        {
+            children_.emplace_back(std::make_shared<Node>());
+            children_.back()->deserialize(is);
+        }
+        else
+        {
+            children_.emplace_back(nullptr);
+        }
+    }
+}
+
+template <typename T>
 void Tree<T>::Node::notifyForChange()
 {
     if(changeObserver_ != nullptr)
@@ -196,6 +254,33 @@ typename Tree<T>::NodePtr Tree<T>::getRoot()
 template <typename T>
 void Tree<T>::nodeChanged()
 {
+}
+
+template <typename T>
+void Tree<T>::serialize(std::ostream& os) const
+{
+    if(root_ != nullptr)
+    {
+        os << true;
+        root_->serialize(os);
+    }
+    else
+    {
+        os << false;
+    }
+}
+
+template <typename T>
+void Tree<T>::deserialize(std::istream& is)
+{
+    bool exists;
+    is >> exists;
+
+    if(exists)
+    {
+        root_ = std::make_shared<Node>();
+        root_->deserialize(is);
+    }
 }
 
 //Tree - Helpers

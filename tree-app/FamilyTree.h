@@ -31,6 +31,9 @@ public:
 
     void nodeChanged() override;
 
+    void serialize(std::ostream& os) const override;
+    void deserialize(std::istream& is) override;
+
 protected:
     void draw(const NodePtr& root, Drawer& drawer);
 
