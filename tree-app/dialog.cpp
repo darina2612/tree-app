@@ -2,7 +2,9 @@
 
 #include <QMenu>
 #include <cassert>
+#include <QMenuBar>
 #include "Drawer.h"
+#include <QVBoxLayout>
 #include "ui_dialog.h"
 #include "ConversionUtils.h"
 #include "DataEditControl.h"
@@ -17,6 +19,11 @@ Dialog::Dialog(QWidget *parent) :
 
     connect(this, SIGNAL(customContextMenuRequested(const QPoint&)),
             this, SLOT(showContextMenu(const QPoint&)));
+
+    auto mainLayout = new QVBoxLayout(this);
+    auto menuBar = new QMenuBar();
+    mainLayout->addWidget(menuBar);
+    menuBar->addAction("File");
 
     //testing, should be removed
     auto personData = std::make_shared<PersonData>("Text", ROOT_DIR "/test_img.jpg");
@@ -107,6 +114,26 @@ void Dialog::showContextMenu(const QPoint& pos)
    contextMenu.addAction(&deleteAction);
 
    contextMenu.exec(mapToGlobal(pos));
+}
+
+void Dialog::showFileMenu()
+{
+    QMenu fileMenu(tr("Файл"), this);
+    QAction openFileAction("Отвори", this);
+    QObject::connect(&openFileAction, &QAction::triggered,
+    []()
+    {
+//        PersonDataPtr newChild = std::make_shared<PersonData>();
+//        nodeEditControl_.updateData(newChild, [this, node](const PersonDataPtr& data)
+//        {
+//            node->addChild({data, {0, 0, 200, 200}});
+//            updateSize();
+//        });
+//        nodeEditControl_.show();
+    });
+    fileMenu.addAction(&openFileAction);
+
+    fileMenu.exec();
 }
 
 void Dialog::updateSize()

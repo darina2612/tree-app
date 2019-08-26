@@ -33,6 +33,8 @@ protected:
 private slots:
     void showContextMenu(const QPoint& pos);
 
+    void showFileMenu();
+
 private:
 
     void updateSize();

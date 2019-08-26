@@ -15,6 +15,8 @@ public:
 
     FamilyTree(const FamilyNode& rootVal);
 
+    FamilyTree(const std::string& filename);
+
     FamilyTree(const FamilyTree& other) = delete;
 
     void draw(Drawer& drawer);
@@ -33,6 +35,8 @@ public:
 
     void serialize(std::ostream& os) const override;
     void deserialize(std::istream& is) override;
+
+    void save(const std::string& filename) const;
 
 protected:
     void draw(const NodePtr& root, Drawer& drawer);

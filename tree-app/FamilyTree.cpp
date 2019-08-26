@@ -1,6 +1,7 @@
 #include "FamilyTree.h"
 
 #include <cassert>
+#include <fstream>
 #include <algorithm>
 
 FamilyTree::FamilyTree() : Tree<FamilyNode>()
@@ -13,6 +14,20 @@ FamilyTree::FamilyTree(const FamilyNode& rootVal) :  Tree<FamilyNode>(rootVal)
 {
     levelsVerticalOffset_ = 30;
     nodesHorizontalOffset_ = 20;
+}
+
+FamilyTree::FamilyTree(const std::string& filename)
+{
+    std::ifstream file{};
+    file.open(filename, std::ios::in | std::ios::binary);
+
+    if(!file)
+    {
+        //TODO : Error output
+        return;
+    }
+
+    deserialize(file);
 }
 
 void FamilyTree::draw(Drawer& drawer)
@@ -69,6 +84,20 @@ void FamilyTree::serialize(std::ostream& os) const
 void FamilyTree::deserialize(std::istream& is)
 {
     Tree<FamilyNode>::deserialize(is);
+}
+
+void FamilyTree::save(const std::string& filename) const
+{
+    std::ofstream file;
+    file.open(filename);
+
+    if(!file)
+    {
+        //TODO : Error info
+        return;
+    }
+
+    serialize(file);
 }
 
 // Helpers
