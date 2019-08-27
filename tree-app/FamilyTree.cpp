@@ -89,7 +89,7 @@ void FamilyTree::deserialize(std::istream& is)
 void FamilyTree::save(const std::string& filename) const
 {
     std::ofstream file;
-    file.open(filename);
+    file.open(filename, std::ios::out | std::ios::binary);
 
     if(!file)
     {

@@ -153,6 +153,9 @@ void MainWindow::openFile()
 
 void MainWindow::saveFile()
 {
+    QString filename = QFileDialog::getSaveFileName(this, tr("Save File"), "",
+                               "Tree (*.tree)");
 
+    tree_->save(filename.toLocal8Bit().data());
 }
 
