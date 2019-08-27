@@ -21,7 +21,7 @@ add_definitions(-DBUILD_DIR="${BUILD_DIR}")
 
 set(SOURCES
     main.cpp
-    dialog.cpp
+    MainWindow.cpp
     PersonData.cpp
     Drawer.cpp
     ConversionUtils.cpp

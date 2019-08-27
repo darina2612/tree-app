@@ -1,29 +1,23 @@
-#include "dialog.h"
+#include "MainWindow.h"
 
 #include <QMenu>
 #include <cassert>
 #include <QMenuBar>
 #include "Drawer.h"
+#include <QFileDialog>
 #include <QVBoxLayout>
-#include "ui_dialog.h"
 #include "ConversionUtils.h"
 #include "DataEditControl.h"
 
-Dialog::Dialog(QWidget *parent) :
-    QDialog(parent),
-    ui(new Ui::Dialog)
+MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
 {
-    ui->setupUi(this);
-
     this->setContextMenuPolicy(Qt::CustomContextMenu);
 
     connect(this, SIGNAL(customContextMenuRequested(const QPoint&)),
             this, SLOT(showContextMenu(const QPoint&)));
 
-    auto mainLayout = new QVBoxLayout(this);
-    auto menuBar = new QMenuBar();
-    mainLayout->addWidget(menuBar);
-    menuBar->addAction("File");
+    createActions();
+    createMenus();
 
     //testing, should be removed
     auto personData = std::make_shared<PersonData>("Text", ROOT_DIR "/test_img.jpg");
@@ -38,12 +32,7 @@ Dialog::Dialog(QWidget *parent) :
         root->addChild(node.copy());
 }
 
-Dialog::~Dialog()
-{
-    delete ui;
-}
-
-void Dialog::paintEvent(QPaintEvent* )
+void MainWindow::paintEvent(QPaintEvent* )
 {
     if(tree_ == nullptr)
         return;
@@ -54,7 +43,7 @@ void Dialog::paintEvent(QPaintEvent* )
     tree_->draw(drawer);
 }
 
-void Dialog::mouseDoubleClickEvent(QMouseEvent* event)
+void MainWindow::mouseDoubleClickEvent(QMouseEvent* event)
 {
     if(tree_ == nullptr)
         return;
@@ -76,21 +65,39 @@ void Dialog::mouseDoubleClickEvent(QMouseEvent* event)
     }
 }
 
-void Dialog::showEvent(QShowEvent* event)
+void MainWindow::showEvent(QShowEvent* event)
 {
     if(event != nullptr && !event->spontaneous())
         updateSize();
 }
 
-void Dialog::showContextMenu(const QPoint& pos)
+void MainWindow::createActions()
+{
+    open = new QAction(tr("&Open"), this);
+    open->setStatusTip(tr("Open existing file."));
+    connect(open, &QAction::triggered, this, &MainWindow::openFile);
+
+    save = new QAction(tr("&Save"), this);
+    save->setStatusTip(tr("Save current file."));
+    connect(save, &QAction::triggered, this, &MainWindow::saveFile);
+}
+
+void MainWindow::createMenus()
+{
+    fileMenu = menuBar()->addMenu(tr("&File"));
+    fileMenu->addAction(open);
+    fileMenu->addAction(save);
+}
+
+void MainWindow::showContextMenu(const QPoint& pos)
 {
    auto node = tree_->getNodeAtPosition(ConversionUtils::pointFromQPoint(pos));
 
    if(node == nullptr)
        return;
 
-   QMenu contextMenu(tr("Меню"), this);
-   QAction addChildAction("Добaви дете", this);
+   QMenu contextMenu(tr("Menu"), this);
+   QAction addChildAction("Add child", this);
    QObject::connect(&addChildAction, &QAction::triggered,
    [this, node]()
    {
@@ -104,7 +111,7 @@ void Dialog::showContextMenu(const QPoint& pos)
    });
    contextMenu.addAction(&addChildAction);
 
-   QAction  deleteAction("Изтрий", this);
+   QAction  deleteAction("Delete", this);
    QObject::connect(&deleteAction, &QAction::triggered,
    [this, &pos]()
    {
@@ -116,27 +123,7 @@ void Dialog::showContextMenu(const QPoint& pos)
    contextMenu.exec(mapToGlobal(pos));
 }
 
-void Dialog::showFileMenu()
-{
-    QMenu fileMenu(tr("Файл"), this);
-    QAction openFileAction("Отвори", this);
-    QObject::connect(&openFileAction, &QAction::triggered,
-    []()
-    {
-//        PersonDataPtr newChild = std::make_shared<PersonData>();
-//        nodeEditControl_.updateData(newChild, [this, node](const PersonDataPtr& data)
-//        {
-//            node->addChild({data, {0, 0, 200, 200}});
-//            updateSize();
-//        });
-//        nodeEditControl_.show();
-    });
-    fileMenu.addAction(&openFileAction);
-
-    fileMenu.exec();
-}
-
-void Dialog::updateSize()
+void MainWindow::updateSize()
 {
     if(tree_ == nullptr)
         return;
@@ -149,3 +136,23 @@ void Dialog::updateSize()
 
     resize(size);
 }
+
+void MainWindow::openFile()
+{
+    QFileDialog* fileDialog = new QFileDialog(this);
+
+    QString filename = QFileDialog::getOpenFileName(fileDialog,"Open tree", "", "Tree (*.tree)");
+
+    if(filename.size() == 0)
+    {
+        return;
+    }
+
+    tree_ = std::make_shared<FamilyTree>(filename.toLocal8Bit().data());
+}
+
+void MainWindow::saveFile()
+{
+
+}
+

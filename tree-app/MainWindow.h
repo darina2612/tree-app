@@ -1,7 +1,7 @@
 #ifndef DIALOG_H
 #define DIALOG_H
 
-#include <QDialog>
+#include <QMainWindow>
 
 #include <QtGui>
 #include <QtCore>
@@ -12,16 +12,16 @@ namespace Ui {
 class Dialog;
 }
 
-class Dialog : public QDialog
+class QMenu;
+class QAction;
+
+class MainWindow : public QMainWindow
 {
     Q_OBJECT
 
 public:
-    explicit Dialog(QWidget *parent = nullptr);
-    ~Dialog() override;
-
-private:
-    Ui::Dialog *ui;
+    explicit MainWindow(QWidget *parent = nullptr);
+    ~MainWindow() override = default;
 
 protected:
     void paintEvent(QPaintEvent*) override;
@@ -31,17 +31,28 @@ protected:
     void showEvent(QShowEvent* event) override;
 
 private slots:
-    void showContextMenu(const QPoint& pos);
+    void createActions();
+    void createMenus();
 
-    void showFileMenu();
+    void showContextMenu(const QPoint& pos);
 
 private:
 
     void updateSize();
 
+    void openFile();
+    void saveFile();
+
     FamilyTreePtr tree_;
 
     DataEditControl nodeEditControl_;
+
+    //Menus
+    QMenu* fileMenu;
+
+    //Actions
+    QAction* open;
+    QAction* save;
 };
 
 #endif // DIALOG_H
