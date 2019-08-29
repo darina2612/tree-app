@@ -5,6 +5,7 @@
 class QPainter;
 struct Rect;
 struct Point;
+class Image;
 
 class Drawer
 {
@@ -15,7 +16,7 @@ public:
 
     void drawLine(const Point& point1, const Point& point2);
 
-    void drawImage(const Rect& frame, const std::string& filename);
+    void drawImage(const Rect& frame, const Image& image);
 
     void drawText(const Rect& frame, const std::string& text);
 

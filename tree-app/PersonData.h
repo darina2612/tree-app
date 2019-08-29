@@ -2,6 +2,7 @@
 
 #include <string>
 #include <memory>
+#include "Image.h"
 #include <iostream>
 
 class Drawer;
@@ -16,8 +17,8 @@ public:
     void setName(const std::string& name);
     const std::string& getName() const;
 
-    void setPictureFileName(const std::string& pictureFileName);
-    const std::string& getPictureFileName() const;
+    void setPicture(const std::string& pictureFileName);
+    const Image& getPicture() const;
 
     void draw(Drawer& drawer, const Rect& frame) const;
 
@@ -26,7 +27,7 @@ public:
 
 protected:
     std::string name_;
-    std::string pictureFileName_;
+    Image picture_;
 };
 
 using PersonDataPtr = std::shared_ptr<PersonData>;

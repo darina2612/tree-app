@@ -24,10 +24,13 @@ FamilyTree::FamilyTree(const std::string& filename)
     if(!file)
     {
         //TODO : Error output
+        std::cout << "Error opening file.\n";
         return;
     }
 
     deserialize(file);
+
+    file.close();
 }
 
 void FamilyTree::draw(Drawer& drawer)
@@ -76,16 +79,6 @@ void FamilyTree::nodeChanged()
     updateLayout();
 }
 
-void FamilyTree::serialize(std::ostream& os) const
-{
-    Tree<FamilyNode>::serialize(os);
-}
-
-void FamilyTree::deserialize(std::istream& is)
-{
-    Tree<FamilyNode>::deserialize(is);
-}
-
 void FamilyTree::save(const std::string& filename) const
 {
     std::ofstream file;
@@ -94,6 +87,7 @@ void FamilyTree::save(const std::string& filename) const
     if(!file)
     {
         //TODO : Error info
+        std::cout << "File save error\n";
         return;
     }
 

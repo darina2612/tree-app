@@ -33,9 +33,6 @@ public:
 
     void nodeChanged() override;
 
-    void serialize(std::ostream& os) const override;
-    void deserialize(std::istream& is) override;
-
     void save(const std::string& filename) const;
 
 protected:

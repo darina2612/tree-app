@@ -5,7 +5,7 @@
 
 PersonData::PersonData(const std::string& name, const std::string& pictureFileName) :
                        name_(name),
-                       pictureFileName_(pictureFileName)
+                       picture_(pictureFileName)
 {
 }
 
@@ -19,31 +19,33 @@ const std::string& PersonData::getName() const
     return name_;
 }
 
-void PersonData::setPictureFileName(const std::string& pictureFileName)
+void PersonData::setPicture(const std::string& pictureFileName)
 {
-    pictureFileName_ = pictureFileName;
+    picture_ = Image(pictureFileName);
 }
 
-const std::string& PersonData::getPictureFileName() const
+const Image& PersonData::getPicture() const
 {
-    return pictureFileName_;
+    return picture_;
 }
 
 void PersonData::draw(Drawer& drawer, const Rect& frame) const
 {
 
     drawer.drawImage({frame.left() + 10, frame.top() + 10, frame.width() - 20, frame.height() - 50},
-                     pictureFileName_);
+                     picture_);
 
     drawer.drawText({frame.left() + 10, frame.bottom() - 40, frame.width() - 20, 30}, name_);
 }
 
 void PersonData::serialize(std::ostream& os) const
 {
-    os << name_ << pictureFileName_;
+    os << name_;
+    //picture_.serialize(os);
 }
 
 void PersonData::deserialize(std::istream& is)
 {
-    is >> name_ >> pictureFileName_;
+    is >> name_;
+    //picture_.deserialize(is);
 }

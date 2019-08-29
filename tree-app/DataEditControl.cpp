@@ -37,7 +37,7 @@ void DataEditControl::setup()
     {
         auto newName = nameEdit_->text().toLocal8Bit().data();
         dataPtr_->setName(newName);
-        dataPtr_->setPictureFileName(pictureChooser_->fileName().toLocal8Bit().data());
+        dataPtr_->setPicture(pictureChooser_->fileName().toLocal8Bit().data());
         if(okClickedCalback_)
             okClickedCalback_(dataPtr_);
         box_->hide();
@@ -52,7 +52,7 @@ void DataEditControl::updateData(const PersonDataPtr& data,
 {
     dataPtr_ = data;
     nameEdit_->setText(dataPtr_->getName().c_str());
-    pictureChooser_->setFileName(dataPtr_->getPictureFileName().c_str());
+    //pictureChooser_->setFileName(dataPtr_->getPictureFileName().c_str());
     okClickedCalback_ = okCalback;
 }
 

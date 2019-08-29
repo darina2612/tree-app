@@ -168,14 +168,14 @@ void Tree<T>::Node::serialize(std::ostream& os) const
 
     for(const auto& child : children_)
     {
-        if(child != nullptr)
+        if(child == nullptr)
         {
-            os << true;
-            child->serialize(os);
+            os << false;
         }
         else
         {
-            os << false;
+            os << true;
+            child->serialize(os);
         }
     }
 }
@@ -261,12 +261,12 @@ void Tree<T>::serialize(std::ostream& os) const
 {
     if(root_ != nullptr)
     {
-        os << true;
-        root_->serialize(os);
+        os << false;
     }
     else
     {
-        os << false;
+        os << true;
+        root_->serialize(os);
     }
 }
 

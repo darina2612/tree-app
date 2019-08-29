@@ -1,6 +1,7 @@
 #include "Drawer.h"
 
 #include "Rect.h"
+#include "Image.h"
 #include <cassert>
 #include <QPainter>
 #include <ConversionUtils.h>
@@ -32,7 +33,7 @@ void Drawer::drawLine(const Point& point1, const Point& point2)
                        ConversionUtils::qPointFromPoint(point2));
 }
 
-void Drawer::drawImage(const Rect& frame, const std::string& filename)
+void Drawer::drawImage(const Rect& frame, const Image& image)
 {
     if(painter_ == nullptr)
     {
@@ -40,9 +41,11 @@ void Drawer::drawImage(const Rect& frame, const std::string& filename)
         return;
     }
 
-    QImage qImage(filename.c_str());
+    const auto& qImage = image.getQImage();
+    if(qImage == nullptr)
+        return;
 
-    painter_->drawImage(ConversionUtils::qRectFromRect(frame), qImage);
+    painter_->drawImage(ConversionUtils::qRectFromRect(frame), *qImage);
 }
 
 void Drawer::drawText(const Rect& frame, const std::string& text)

@@ -17,7 +17,9 @@ FamilyNode FamilyNode::copy() const
 void FamilyNode::draw(Drawer& drawer)
 {
     drawer.drawRect(frame_);
-    data_->draw(drawer, frame_);
+
+    if(data_ != nullptr)
+        data_->draw(drawer, frame_);
 }
 
 Rect& FamilyNode::getFrame()

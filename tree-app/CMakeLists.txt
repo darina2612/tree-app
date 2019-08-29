@@ -29,7 +29,8 @@ set(SOURCES
     FamilyNode.cpp
     DataEditControl.cpp
     PictureChooser.cpp
-    TextLineEditControl.cpp)
+    TextLineEditControl.cpp
+    Image.cpp)
 
 add_executable(tree-app ${SOURCES})
 

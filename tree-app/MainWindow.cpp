@@ -79,6 +79,7 @@ void MainWindow::createActions()
 
     save = new QAction(tr("&Save"), this);
     save->setStatusTip(tr("Save current file."));
+    save->setShortcut(QKeySequence::Save);
     connect(save, &QAction::triggered, this, &MainWindow::saveFile);
 }
 
