@@ -4,6 +4,7 @@
 #include <memory>
 #include <iostream>
 #include <algorithm>
+#include "SerializationUtils.h"
 
 class NodeChangeObserver
 {
@@ -160,52 +161,15 @@ void Tree<T>::Node::setObserver(NodeChangeObserver* observer)
 template <typename T>
 void Tree<T>::Node::serialize(std::ostream& os) const
 {
-    value_.serialize(os);
-    os << children_.size();
-
-    if(children_.size() == 0)
-        return;
-
-    for(const auto& child : children_)
-    {
-        if(child == nullptr)
-        {
-            os << false;
-        }
-        else
-        {
-            os << true;
-            child->serialize(os);
-        }
-    }
+    Serialization::serialize(os, value_);
+    Serialization::serialize(os, children_);
 }
 
 template <typename T>
 void Tree<T>::Node::deserialize(std::istream& is)
 {
-    value_.deserialize(is);
-
-    size_t size;
-    is >> size;
-
-    if(size == 0)
-        return;
-
-    for(size_t  i = 0; i < size; ++i)
-    {
-        bool exists;
-        is >> exists;
-
-        if(exists)
-        {
-            children_.emplace_back(std::make_shared<Node>());
-            children_.back()->deserialize(is);
-        }
-        else
-        {
-            children_.emplace_back(nullptr);
-        }
-    }
+    Deserialization::deserialize(is, value_);
+    Deserialization::deserialize(is, children_);
 }
 
 template <typename T>
@@ -259,28 +223,13 @@ void Tree<T>::nodeChanged()
 template <typename T>
 void Tree<T>::serialize(std::ostream& os) const
 {
-    if(root_ != nullptr)
-    {
-        os << false;
-    }
-    else
-    {
-        os << true;
-        root_->serialize(os);
-    }
+    Serialization::serialize(os, root_);
 }
 
 template <typename T>
 void Tree<T>::deserialize(std::istream& is)
 {
-    bool exists;
-    is >> exists;
-
-    if(exists)
-    {
-        root_ = std::make_shared<Node>();
-        root_->deserialize(is);
-    }
+    Deserialization::deserialize(is, root_);
 }
 
 //Tree - Helpers

@@ -2,6 +2,7 @@
 
 #include "Rect.h"
 #include "Drawer.h"
+#include "SerializationUtils.h"
 
 PersonData::PersonData(const std::string& name, const std::string& pictureFileName) :
                        name_(name),
@@ -40,12 +41,12 @@ void PersonData::draw(Drawer& drawer, const Rect& frame) const
 
 void PersonData::serialize(std::ostream& os) const
 {
-    os << name_;
+    Serialization::serialize(os, name_);
     //picture_.serialize(os);
 }
 
 void PersonData::deserialize(std::istream& is)
 {
-    is >> name_;
+    Deserialization::deserialize(is, name_);
     //picture_.deserialize(is);
 }

@@ -4,6 +4,7 @@
 #include "Point.h"
 #include <iostream>
 #include <algorithm>
+#include "SerializationUtils.h"
 
 struct Rect
 {
@@ -81,14 +82,14 @@ struct Rect
 
     void serialize(std::ostream& os) const
     {
-        origin_.serialize(os);
-        size_.serialize(os);
+        Serialization::serialize(os, origin_);
+        Serialization::serialize(os, size_);
     }
 
     void deserialize(std::istream& is)
     {
-        origin_.deserialize(is);
-        size_.deserialize(is);
+        Deserialization::deserialize(is, origin_);
+        Deserialization::deserialize(is, size_);
     }
 
     Point origin_;

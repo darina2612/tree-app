@@ -1,5 +1,6 @@
 #pragma once
 #include <fstream>
+#include "SerializationUtils.h"
 
 struct Point
 {
@@ -9,12 +10,14 @@ struct Point
 
     void serialize(std::ostream& os) const
     {
-        os << x_ << y_;
+        Serialization::serialize(os, x_);
+        Serialization::serialize(os, y_);
     }
 
     void deserialize(std::istream& is)
     {
-        is >> x_ >> y_;
+        Deserialization::deserialize(is, x_);
+        Deserialization::deserialize(is, y_);
     }
 
     int x_;

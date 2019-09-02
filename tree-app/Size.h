@@ -1,5 +1,6 @@
 #pragma once
 #include <iostream>
+#include "SerializationUtils.h"
 
 struct Size
 {
@@ -9,12 +10,14 @@ struct Size
 
     void serialize(std::ostream& os) const
     {
-        os << width_ << height_;
+       Serialization::serialize(os, width_);
+       Serialization::serialize(os, height_);
     }
 
     void deserialize(std::istream& is)
     {
-        is >> width_ >> height_;
+        Deserialization::deserialize(is, width_);
+        Deserialization::deserialize(is, height_);
     }
 
     int width_;
