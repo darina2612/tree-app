@@ -4,6 +4,8 @@
 
 struct Point
 {
+    Point() = default;
+
     Point(int x, int y) : x_(x), y_(y)
     {
     }
@@ -20,6 +22,6 @@ struct Point
         Deserialization::deserialize(is, y_);
     }
 
-    int x_;
-    int y_;
+    int x_{};
+    int y_{};
 };

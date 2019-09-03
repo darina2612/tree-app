@@ -1,6 +1,7 @@
 #include "Image.h"
 #include <QBuffer>
 #include <QDataStream>
+#include "SerializationUtils.h"
 
 Image::Image(const std::string& filename)
 {
@@ -14,33 +15,10 @@ const std::shared_ptr<QImage>& Image::getQImage() const
 
 void Image::serialize(std::ostream& os) const
 {
-    if(qImage_ ==  nullptr)
-    {
-        os << false;
-        return;
-    }
-
-    os << true;
-
-    QBuffer buffer;
-    buffer.open(QIODevice::WriteOnly);
-    QDataStream ds{&buffer};
-    ds << *qImage_;
-    buffer.close();
-    os << buffer.buffer().data();
-
+    Serialization::serialize(os, qImage_);
 }
 
 void Image::deserialize(std::istream& is)
 {
-    bool exists;
-    is >> exists;
-    if(!exists)
-    {
-        qImage_.reset();
-        return;
-    }
-
-    qImage_ = std::make_shared<QImage>();
-
+    Deserialization::deserialize(is, qImage_);
 }

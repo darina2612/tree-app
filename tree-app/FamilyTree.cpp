@@ -94,6 +94,20 @@ void FamilyTree::save(const std::string& filename) const
     serialize(file);
 }
 
+void FamilyTree::serialize(std::ostream& os) const
+{
+    Tree<FamilyNode>::serialize(os);
+    Serialization::serialize(os, levelsVerticalOffset_);
+    Serialization::serialize(os, nodesHorizontalOffset_);
+}
+
+void FamilyTree::deserialize(std::istream& is)
+{
+    Tree<FamilyNode>::deserialize(is);
+    Deserialization::deserialize(is, levelsVerticalOffset_);
+    Deserialization::deserialize(is, nodesHorizontalOffset_);
+}
+
 // Helpers
 void FamilyTree::draw(const NodePtr& root, Drawer& drawer)
 {

@@ -42,11 +42,11 @@ void PersonData::draw(Drawer& drawer, const Rect& frame) const
 void PersonData::serialize(std::ostream& os) const
 {
     Serialization::serialize(os, name_);
-    //picture_.serialize(os);
+    picture_.serialize(os);
 }
 
 void PersonData::deserialize(std::istream& is)
 {
     Deserialization::deserialize(is, name_);
-    //picture_.deserialize(is);
+    picture_.deserialize(is);
 }

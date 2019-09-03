@@ -3,6 +3,8 @@
 #include <vector>
 #include <memory>
 #include <string>
+#include <QImage>
+#include <QBuffer>
 #include <iostream>
 
 namespace Serialization
@@ -25,7 +27,21 @@ namespace Serialization
     {
         auto size = sizeof(char) * (value.length() + 1);
         serialize(stream, size);
-        stream.write(reinterpret_cast<const char*>(value.data()), sizeof(char) * (value.length() + 1));
+        stream.write(reinterpret_cast<const char*>(value.data()), size);
+    }
+
+    inline void serialize(std::ostream& stream, const QImage& value)
+    {
+        QBuffer buffer;
+        buffer.open(QIODevice::WriteOnly);
+        QDataStream ds{&buffer};
+        ds << value;
+        buffer.close();
+
+        auto data = buffer.buffer().constData();
+        auto size = sizeof(char) * (buffer.buffer().length() + 1);
+        serialize(stream, size);
+        stream.write(data, size);
     }
 
     template<typename T>
@@ -92,8 +108,31 @@ namespace Deserialization
 
         auto data = new char[size];
 
-        stream.read(reinterpret_cast<char*>(data), size);
+        stream.read(data, size);
         value.append(data);
+
+        delete[] data;
+    }
+
+    inline void deserialize(std::istream& stream, QImage& value)
+    {
+        size_t size;
+        deserialize(stream, size);
+
+        if(size == 0)
+            return;
+
+        auto data = new char[size];
+
+        stream.read(data, size);
+
+        QBuffer buffer;
+        buffer.setData(data, size);
+        buffer.open(QIODevice::ReadOnly);
+        QDataStream ds{&buffer};
+        ds >> value;
+
+        delete[] data;
     }
 
     template<typename T>

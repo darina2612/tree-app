@@ -4,6 +4,8 @@
 
 struct Size
 {
+    Size() = default;
+
     Size(int width, int height) : width_(width), height_(height)
     {
     }
@@ -20,6 +22,6 @@ struct Size
         Deserialization::deserialize(is, height_);
     }
 
-    int width_;
-    int height_;
+    int width_{};
+    int height_{};
 };

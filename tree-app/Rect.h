@@ -92,6 +92,6 @@ struct Rect
         Deserialization::deserialize(is, size_);
     }
 
-    Point origin_;
-    Size size_;
+    Point origin_{};
+    Size size_{};
 };
