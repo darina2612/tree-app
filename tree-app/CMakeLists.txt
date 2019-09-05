@@ -30,7 +30,8 @@ set(SOURCES
     DataEditControl.cpp
     PictureChooser.cpp
     TextLineEditControl.cpp
-    Image.cpp)
+    Image.cpp
+    EditController.cpp)
 
 add_executable(tree-app ${SOURCES})
 

@@ -6,6 +6,7 @@
 #include <QtGui>
 #include <QtCore>
 #include "FamilyTree.h"
+#include "EditController.h"
 #include "DataEditControl.h"
 
 namespace Ui {
@@ -44,6 +45,7 @@ private:
     void saveFile();
 
     FamilyTreePtr tree_;
+    EditController editor_;
 
     DataEditControl nodeEditControl_;
 
