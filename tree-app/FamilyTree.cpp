@@ -4,13 +4,13 @@
 #include <fstream>
 #include <algorithm>
 
-FamilyTree::FamilyTree() : Tree<FamilyNode>()
+FamilyTree::FamilyTree() : Tree<FamilyNode, size_t>()
 {
     levelsVerticalOffset_ = 30;
     nodesHorizontalOffset_ = 20;
 }
 
-FamilyTree::FamilyTree(const FamilyNode& rootVal) :  Tree<FamilyNode>(rootVal)
+FamilyTree::FamilyTree(const FamilyNode& rootVal) : Tree<FamilyNode, size_t>(rootVal)
 {
     levelsVerticalOffset_ = 30;
     nodesHorizontalOffset_ = 20;
@@ -96,16 +96,23 @@ void FamilyTree::save(const std::string& filename) const
 
 void FamilyTree::serialize(std::ostream& os) const
 {
-    Tree<FamilyNode>::serialize(os);
+    Tree<FamilyNode, size_t>::serialize(os);
+    Serialization::serialize(os, maxNodeId_);
     Serialization::serialize(os, levelsVerticalOffset_);
     Serialization::serialize(os, nodesHorizontalOffset_);
 }
 
 void FamilyTree::deserialize(std::istream& is)
 {
-    Tree<FamilyNode>::deserialize(is);
+    Tree<FamilyNode, size_t>::deserialize(is);
+    Deserialization::deserialize(is, maxNodeId_);
     Deserialization::deserialize(is, levelsVerticalOffset_);
     Deserialization::deserialize(is, nodesHorizontalOffset_);
+}
+
+size_t FamilyTree::getNextId()
+{
+    return maxNodeId_++;
 }
 
 // Helpers

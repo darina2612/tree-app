@@ -48,4 +48,3 @@ void FamilyNode::deserialize(std::istream& is)
     frame_.deserialize(is);
     Deserialization::deserialize(is, data_);
 }
-

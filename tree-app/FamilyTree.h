@@ -8,7 +8,7 @@
 class Drawer;
 struct Point;
 
-class FamilyTree : public Tree<FamilyNode>
+class FamilyTree : public Tree<FamilyNode, size_t>
 {
 public:
     FamilyTree();
@@ -38,6 +38,8 @@ public:
     void serialize(std::ostream& os) const override;
     void deserialize(std::istream& is) override;
 
+    size_t getNextId() override;
+
 protected:
     void draw(const NodePtr& root, Drawer& drawer);
 
@@ -61,6 +63,8 @@ protected:
     int nodesHorizontalOffset_;
 
     std::map<size_t, int> levelsWidths_;
+
+    size_t maxNodeId_{};
 };
 
 using FamilyTreePtr = std::shared_ptr<FamilyTree>;
