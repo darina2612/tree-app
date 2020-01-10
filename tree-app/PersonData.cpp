@@ -22,6 +22,9 @@ const std::string& PersonData::getName() const
 
 void PersonData::setPicture(const std::string& pictureFileName)
 {
+    if(pictureFileName.empty())
+        return;
+
     picture_ = Image(pictureFileName);
 }
 
