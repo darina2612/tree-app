@@ -1,9 +1,11 @@
 #include "EditController.h"
 
-void EditController::addCommand(const CommandPtr& command)
+void EditController::addCommand(const CommandPtr& command, bool execute)
 {
     undo_stack_.push(command);
     std::stack<CommandPtr>().swap(redo_stack_);
+    if(execute)
+        undo_stack_.top()->redo();
 }
 
 void EditController::undo()

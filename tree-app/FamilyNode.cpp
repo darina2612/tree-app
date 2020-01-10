@@ -1,7 +1,7 @@
 #include "FamilyNode.h"
 
-FamilyNode::FamilyNode(const PersonDataPtr& data, const Rect& frame) :
-    data_(data), frame_(frame)
+FamilyNode::FamilyNode(PersonDataPtr data, const Rect& frame) :
+    data_(std::move(data)), frame_(frame)
 
 {
 

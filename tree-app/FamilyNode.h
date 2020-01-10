@@ -10,7 +10,7 @@ class FamilyNode
 public:
     FamilyNode() = default;
 
-    FamilyNode(const PersonDataPtr& data, const Rect& frame);
+    FamilyNode(PersonDataPtr data, const Rect& frame);
 
     //deep copy
     FamilyNode copy() const;

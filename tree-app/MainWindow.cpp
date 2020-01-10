@@ -6,6 +6,8 @@
 #include "Drawer.h"
 #include <QFileDialog>
 #include <QVBoxLayout>
+#include "DeleteCommand.h"
+#include "EditController.h"
 #include "ConversionUtils.h"
 #include "DataEditControl.h"
 
@@ -73,6 +75,8 @@ void MainWindow::showEvent(QShowEvent* event)
 
 void MainWindow::createActions()
 {
+    //File
+
     open = new QAction(tr("&Open"), this);
     open->setStatusTip(tr("Open existing file."));
     connect(open, &QAction::triggered, this, &MainWindow::openFile);
@@ -81,6 +85,18 @@ void MainWindow::createActions()
     save->setStatusTip(tr("Save current file."));
     save->setShortcut(QKeySequence::Save);
     connect(save, &QAction::triggered, this, &MainWindow::saveFile);
+
+    //Edit
+
+    undoAction = new QAction(tr("&Undo"), this);
+    undoAction->setStatusTip(tr("Undo last change."));
+    undoAction->setShortcut(QKeySequence::Undo);
+    connect(undoAction, &QAction::triggered, this, &MainWindow::undo);
+
+    redoAction = new QAction(tr("&Redo"), this);
+    redoAction->setStatusTip(tr("Redo last change."));
+    redoAction->setShortcut(QKeySequence::Redo);
+    connect(redoAction, &QAction::triggered, this, &MainWindow::redo);
 }
 
 void MainWindow::createMenus()
@@ -88,6 +104,10 @@ void MainWindow::createMenus()
     fileMenu = menuBar()->addMenu(tr("&File"));
     fileMenu->addAction(open);
     fileMenu->addAction(save);
+
+    editMenu = menuBar()->addMenu(tr("&Edit"));
+    editMenu->addAction(undoAction);
+    editMenu->addAction(redoAction);
 }
 
 void MainWindow::showContextMenu(const QPoint& pos)
@@ -116,7 +136,9 @@ void MainWindow::showContextMenu(const QPoint& pos)
    QObject::connect(&deleteAction, &QAction::triggered,
    [this, &pos]()
    {
-       tree_->removeSubtreeAtPosition(ConversionUtils::pointFromQPoint(pos));
+       auto deleteCommand = std::make_shared<DeleteCommand>(tree_,
+                                                            tree_->getNodePositionInfo(ConversionUtils::pointFromQPoint(pos)));
+       editor_.addCommand(deleteCommand);
        repaint();
    });
    contextMenu.addAction(&deleteAction);
@@ -160,3 +182,16 @@ void MainWindow::saveFile()
     tree_->save(filename.toLocal8Bit().data());
 }
 
+void MainWindow::undo()
+{
+    editor_.undo();
+
+    repaint();
+}
+
+void MainWindow::redo()
+{
+    editor_.redo();
+
+    repaint();
+}

@@ -3,14 +3,15 @@
 #include <cassert>
 #include <fstream>
 #include <algorithm>
+#include "PositionInfo.h"
 
-FamilyTree::FamilyTree() : Tree<FamilyNode, size_t>()
+FamilyTree::FamilyTree() : Tree<FamilyNode, FamilyTreeIdType>()
 {
     levelsVerticalOffset_ = 30;
     nodesHorizontalOffset_ = 20;
 }
 
-FamilyTree::FamilyTree(const FamilyNode& rootVal) : Tree<FamilyNode, size_t>(rootVal)
+FamilyTree::FamilyTree(const FamilyNode& rootVal) : Tree<FamilyNode, FamilyTreeIdType>(rootVal)
 {
     levelsVerticalOffset_ = 30;
     nodesHorizontalOffset_ = 20;
@@ -53,12 +54,22 @@ PersonDataPtr FamilyTree::getDataForNodeAtPosition(const Point& pos) const
     return nullptr;
 }
 
-void FamilyTree::removeSubtreeAtPosition(const Point& pos)
+void FamilyTree::removeSubtree(const PositionInfo<FamilyTreeIdType>& posInfo)
 {
-    if(root_ != nullptr && root_->getValue().getFrame().contains(pos))
+    if(posInfo.parentId_ == -1)
+    {
         root_.reset();
+        return;
+    }
+}
 
-    removeSubtreeAtPosition(root_, pos);
+void FamilyTree::addSubtree(FamilyTree::NodePtr& subtreeRoot, const PositionInfo<FamilyTreeIdType>& posInfo)
+{
+    auto& parent = getNode(posInfo.parentId_);
+    if(parent == nullptr)
+        return;
+
+    parent->addChildAfter(posInfo.prevElementId_, subtreeRoot);
 }
 
 Rect FamilyTree::getBoundingBox() const
@@ -96,7 +107,7 @@ void FamilyTree::save(const std::string& filename) const
 
 void FamilyTree::serialize(std::ostream& os) const
 {
-    Tree<FamilyNode, size_t>::serialize(os);
+    Tree<FamilyNode, FamilyTreeIdType>::serialize(os);
     Serialization::serialize(os, maxNodeId_);
     Serialization::serialize(os, levelsVerticalOffset_);
     Serialization::serialize(os, nodesHorizontalOffset_);
@@ -104,15 +115,45 @@ void FamilyTree::serialize(std::ostream& os) const
 
 void FamilyTree::deserialize(std::istream& is)
 {
-    Tree<FamilyNode, size_t>::deserialize(is);
+    Tree<FamilyNode, FamilyTreeIdType>::deserialize(is);
     Deserialization::deserialize(is, maxNodeId_);
     Deserialization::deserialize(is, levelsVerticalOffset_);
     Deserialization::deserialize(is, nodesHorizontalOffset_);
 }
 
-size_t FamilyTree::getNextId()
+FamilyTreeIdType FamilyTree::getNextId()
 {
     return maxNodeId_++;
+}
+
+PositionInfo<FamilyTreeIdType> FamilyTree::getNodePositionInfo(const Point& pos) const
+{
+    auto node = getNodeAtPosition(pos);
+
+    PositionInfo<FamilyTreeIdType> rootInfo(-1, -1);
+    if(node == nullptr)
+    {
+        assert(false);
+        return rootInfo;
+    }
+
+    auto parent = getParent(node->getId());
+
+    if(parent == nullptr)
+        return rootInfo;
+
+    const auto& parentChildern = parent->getChildren();
+    auto it = std::find_if(parentChildern.begin(), parentChildern.end(),
+                               [node](const auto& child)
+    {
+        return child->getId() == node->getId();
+    });
+
+    FamilyTreeIdType prevId{-1};
+    if(it != parentChildern.begin())
+        prevId = (--it)->get()->getId();
+
+    return {parent->getId(), prevId};
 }
 
 // Helpers
@@ -148,6 +189,36 @@ FamilyTree::NodePtr FamilyTree::getNodeAtPosition(const NodePtr& root, const Poi
         auto node = getNodeAtPosition(child, pos);
         if(node != nullptr)
             return node;
+    }
+
+    return nullptr;
+}
+
+FamilyTree::NodePtr FamilyTree::getParent(size_t id) const
+{
+    return getParent(root_, id);
+}
+
+FamilyTree::NodePtr FamilyTree::getParent(const NodePtr& root, size_t id) const
+{
+    if(root == nullptr)
+        return nullptr;
+
+    const auto& children = root->getChildren();
+
+    auto it = std::find_if(children.begin(), children.end(), [id](const auto& child)
+    {
+        return child->getId() == id;
+    });
+
+    if(it != children.end())
+        return root;
+
+    for(const auto& child : children)
+    {
+        auto parent = getParent(child, id);
+        if(parent != nullptr)
+            return parent;
     }
 
     return nullptr;

@@ -4,11 +4,14 @@
 #include "Tree.h"
 #include "Rect.h"
 #include "FamilyNode.h"
+#include "PositionInfo.h"
 
 class Drawer;
 struct Point;
 
-class FamilyTree : public Tree<FamilyNode, size_t>
+using FamilyTreeIdType = int;
+
+class FamilyTree : public Tree<FamilyNode, FamilyTreeIdType>
 {
 public:
     FamilyTree();
@@ -25,7 +28,9 @@ public:
 
     PersonDataPtr getDataForNodeAtPosition(const Point& pos) const;
 
-    void removeSubtreeAtPosition(const Point& pos);
+    void removeSubtree(const PositionInfo<FamilyTreeIdType>& posInfo);
+
+    void addSubtree(NodePtr& subtreeRoot, const PositionInfo<FamilyTreeIdType>& posInfo);
 
     Rect getBoundingBox() const;
 
@@ -38,12 +43,18 @@ public:
     void serialize(std::ostream& os) const override;
     void deserialize(std::istream& is) override;
 
-    size_t getNextId() override;
+    FamilyTreeIdType getNextId() override;
+
+    PositionInfo<FamilyTreeIdType> getNodePositionInfo(const Point& pos) const;
 
 protected:
     void draw(const NodePtr& root, Drawer& drawer);
 
     NodePtr getNodeAtPosition(const NodePtr& root, const Point& pos) const;
+
+    NodePtr getParent(size_t id) const;
+
+    NodePtr getParent(const NodePtr& root, size_t id) const;
 
     bool removeSubtreeAtPosition(NodePtr& root, const Point& pos);
 
@@ -64,7 +75,7 @@ protected:
 
     std::map<size_t, int> levelsWidths_;
 
-    size_t maxNodeId_{};
+    FamilyTreeIdType maxNodeId_{};
 };
 
 using FamilyTreePtr = std::shared_ptr<FamilyTree>;

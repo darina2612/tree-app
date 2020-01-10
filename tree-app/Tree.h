@@ -26,7 +26,7 @@ class Tree : public NodeChangeObserver, public NodeIdProvider<ElementIdType>
 {
 public:
 
-    class Node
+    class Node : public std::enable_shared_from_this<Node>
     {
     public:
         Node() = default;
@@ -45,6 +45,8 @@ public:
 
         bool removeChild(const std::function<bool (const std::shared_ptr<Node>&)> pred);
 
+        bool addChildAfter(ElementIdType prevId, const std::shared_ptr<Node>& child);
+
         void setObserver(NodeChangeObserver* observer);
         void setIdProvider(NodeIdProvider<ElementIdType>* idProvider);
 
@@ -53,6 +55,11 @@ public:
 
         void serialize(std::ostream& os) const;
         void deserialize(std::istream& is);
+
+        std::shared_ptr<Node> getPtr();
+
+        std::shared_ptr<Node> getChildWithId(ElementIdType id) const;
+        std::shared_ptr<Node>& getChildWithId(ElementIdType id);
 
     protected:
 
@@ -64,6 +71,8 @@ public:
 
         NodeChangeObserver* changeObserver_;
         NodeIdProvider<ElementIdType>* idProvider_;
+
+        std::shared_ptr<Node> invalidNode_{nullptr};
     };
 
     using NodePtr = std::shared_ptr<Node>;
@@ -81,7 +90,12 @@ public:
 
     NodePtr getRoot();
 
+    NodePtr getNode(ElementIdType id) const;
+    NodePtr& getNode(ElementIdType id);
+
     void nodeChanged() override;
+
+    void removeNodeWithId(ElementIdType id);
 
     virtual void serialize(std::ostream& os) const;
     virtual void deserialize(std::istream& is);
@@ -91,6 +105,8 @@ protected:
     size_t height(const NodePtr& root) const;
 
     void getNodesAtLevel(const NodePtr& root, NodesList& nodes, size_t level) const;
+
+    bool removeNodeWithId(NodePtr& root, ElementIdType id);
 
     NodePtr root_;
 };
@@ -170,6 +186,29 @@ bool Tree<ValueType, ElementIdType>::Node::removeChild(const std::function<bool 
 }
 
 template <typename ValueType, typename ElementIdType>
+bool Tree<ValueType, ElementIdType>::Node::addChildAfter(ElementIdType prevId, const NodePtr& child)
+
+{
+    auto it = std::find_if(children_.begin(), children_.end(),
+                           [prevId](const auto& child)
+    {
+        return child->getId() == prevId;
+    });
+
+    if(it != children_.end())
+    {
+        auto next = ++it;
+        if(next != children_.end())
+            children_.insert(next, child);
+        else
+            children_.emplace_back(child);
+
+        return true;
+    }
+    return false;
+}
+
+template <typename ValueType, typename ElementIdType>
 void Tree<ValueType, ElementIdType>::Node::setObserver(NodeChangeObserver* observer)
 {
     changeObserver_ = observer;
@@ -207,6 +246,44 @@ void Tree<ValueType, ElementIdType>::Node::deserialize(std::istream& is)
     Deserialization::deserialize(is, id_);
     Deserialization::deserialize(is, value_);
     Deserialization::deserialize(is, children_);
+}
+
+template <typename ValueType, typename ElementIdType>
+typename Tree<ValueType, ElementIdType>::NodePtr Tree<ValueType, ElementIdType>::Node::getPtr()
+{
+    return this->shared_from_this();
+}
+
+template <typename ValueType, typename ElementIdType>
+typename Tree<ValueType, ElementIdType>::NodePtr Tree<ValueType, ElementIdType>::Node::getChildWithId(ElementIdType id) const
+{
+    for(const auto& child : children_)
+    {
+        if(child->getId() == id)
+            return child;
+
+        auto childsChild = getChildWithId(id);
+        if(childsChild != nullptr)
+            return childsChild;
+    }
+
+    return nullptr;
+}
+
+template <typename ValueType, typename ElementIdType>
+typename Tree<ValueType, ElementIdType>::NodePtr& Tree<ValueType, ElementIdType>::Node::getChildWithId(ElementIdType id)
+{
+    for(auto& child : children_)
+    {
+        if(child->getId() == id)
+            return child;
+
+        auto& childsChild = getChildWithId(id);
+        if(childsChild != nullptr)
+            return childsChild;
+    }
+
+    return invalidNode_;
 }
 
 template <typename ValueType, typename ElementIdType>
@@ -254,8 +331,32 @@ typename Tree<ValueType, ElementIdType>::NodePtr Tree<ValueType, ElementIdType>:
 }
 
 template <typename ValueType, typename ElementIdType>
+typename Tree<ValueType, ElementIdType>::NodePtr Tree<ValueType, ElementIdType>::getNode(ElementIdType id) const
+{
+    if(root_->getId() == id)
+        return root_;
+
+    return root_->getChildWithId(id);
+}
+
+template <typename ValueType, typename ElementIdType>
+typename Tree<ValueType, ElementIdType>::NodePtr& Tree<ValueType, ElementIdType>::getNode(ElementIdType id)
+{
+    if(root_->getId() == id)
+        return root_;
+
+    return root_->getChildWithId(id);
+}
+
+template <typename ValueType, typename ElementIdType>
 void Tree<ValueType, ElementIdType>::nodeChanged()
 {
+}
+
+template <typename ValueType, typename ElementIdType>
+void Tree<ValueType, ElementIdType>::removeNodeWithId(ElementIdType id)
+{
+    removeNodeWithId(root_, id);
 }
 
 template <typename ValueType, typename ElementIdType>
@@ -305,4 +406,33 @@ void Tree<ValueType, ElementIdType>::getNodesAtLevel(const Tree<ValueType, Eleme
     {
         getNodesAtLevel(child, nodes, level - 1);
     });
+}
+
+template <typename ValueType, typename ElementIdType>
+bool Tree<ValueType, ElementIdType>::removeNodeWithId(NodePtr& root, ElementIdType id)
+{
+    if(root == nullptr)
+        return false;
+
+    if(root->getId() == id)
+    {
+        root.reset();
+        return true;
+    }
+
+    if(root->removeChild([id](const auto& child)
+    {
+                         return child->getId() == id;
+    }))
+        return true;
+
+    auto& children = root->getChildren();
+
+    for(auto& child : children)
+    {
+        if(removeNodeWithId(child, id))
+            return true;
+    }
+
+    return false;
 }

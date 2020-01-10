@@ -8,7 +8,7 @@ class EditController
 public:
     EditController() = default;
 
-    void addCommand(const CommandPtr& command);
+    void addCommand(const CommandPtr& command, bool execute = true);
 
     void undo();
     void redo();

@@ -44,6 +44,9 @@ private:
     void openFile();
     void saveFile();
 
+    void undo();
+    void redo();
+
     FamilyTreePtr tree_;
     EditController editor_;
 
@@ -51,10 +54,17 @@ private:
 
     //Menus
     QMenu* fileMenu;
+    QMenu* editMenu;
 
     //Actions
+
+    //File
     QAction* open;
     QAction* save;
+
+    //Edit
+    QAction* undoAction;
+    QAction* redoAction;
 };
 
 #endif // DIALOG_H
